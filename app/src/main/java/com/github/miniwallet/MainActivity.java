@@ -4,14 +4,29 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.Toast;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.OnClick;
 
 
 public class MainActivity extends Activity {
+
+    @InjectView(R.id.button)
+    Button exampleButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.inject(this);
+    }
+
+    @OnClick(R.id.button)
+    public void onExampleButtonClick(Button button) {
+        Toast.makeText(this, "Button clicked!", Toast.LENGTH_SHORT).show();
     }
 
 
