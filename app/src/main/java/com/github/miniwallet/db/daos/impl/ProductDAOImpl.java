@@ -52,9 +52,8 @@ public class ProductDAOImpl implements ProductDAO {
     @Override
     public Product getProductByName(String name) {
         List<ProductTable> product = ProductTable.find(ProductTable.class, "name = ?", name);
-        if(product.isEmpty()) return null;
 
-        return product.get(0).convert();
+        return product.isEmpty() ? null : product.get(0).convert();
     }
 
     @Override
