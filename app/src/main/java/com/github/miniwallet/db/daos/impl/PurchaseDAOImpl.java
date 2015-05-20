@@ -33,7 +33,6 @@ public class PurchaseDAOImpl implements PurchaseDAO {
     @Override
     public Long insertPurchase(Purchase purchase) {
         PurchaseTable purchaseTable = PurchaseTable.create(purchase);
-        purchase.setId(purchaseTable.getId());
         return purchaseTable.getId();
     }
 }

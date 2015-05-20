@@ -15,7 +15,6 @@ public class ProductDAOImpl implements ProductDAO {
     @Override
     public Long insertProduct(Product product) {
         ProductTable productTable = ProductTable.create(product);
-        productTable.setId(productTable.getId());
         return productTable.getId();
     }
 
