@@ -1,15 +1,9 @@
 package com.github.miniwallet.shopping;
 
-import com.github.miniwallet.db.daos.impl.entities.PriceTable;
-import com.github.miniwallet.db.daos.impl.entities.ProductTable;
-import com.github.miniwallet.db.daos.impl.entities.PurchaseTable;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Date;
 
-/**
- * Created by deviance on 19.05.15.
- */
 public class Purchase {
     private Long id;
     private double price;

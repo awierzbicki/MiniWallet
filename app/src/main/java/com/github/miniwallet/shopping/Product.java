@@ -1,10 +1,5 @@
 package com.github.miniwallet.shopping;
 
-import java.util.List;
-
-/**
- * Created by deviance on 19.05.15.
- */
 public class Product {
     private Long id;
     private Category category;
@@ -49,6 +44,14 @@ public class Product {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public void setLastPrice(double lastPrice) {
+        this.lastPrice = lastPrice;
+    }
+
+    public void setTotalPurchases(int totalPurchases) {
+        this.totalPurchases = totalPurchases;
     }
 
     @Override

@@ -1,9 +1,5 @@
 package com.github.miniwallet.shopping;
 
-import com.github.miniwallet.db.daos.impl.entities.*;
-/*
- * Created by deviance on 19.05.15.
- */
 public class Category {
     private Long id;
     private String name;
