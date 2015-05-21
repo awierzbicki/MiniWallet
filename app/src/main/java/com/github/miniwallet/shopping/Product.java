@@ -63,4 +63,8 @@ public class Product {
                 ", totalPurchases=" + totalPurchases +
                 '}';
     }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
 }

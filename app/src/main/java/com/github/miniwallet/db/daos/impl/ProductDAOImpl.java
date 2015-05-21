@@ -40,6 +40,19 @@ public class ProductDAOImpl implements ProductDAO {
         }
     }
 
+    @Override
+    public void modifyProductCategory(Product product, Category category) {
+        ProductTable productTable =  ProductTable.getTableRepresentation(product);
+        CategoryTable categoryTable = CategoryTable.create(category);
+        if(productTable == null) {
+            throw new RuntimeException("Can't modify product that hasn't been inserted");
+        } else {
+            productTable.setCategory(categoryTable);
+            product.setCategory(category);
+            productTable.save();
+        }
+    }
+
 
     @Override
     public Map<Date, Double> getPriceHistoryForProduct(Product product) {

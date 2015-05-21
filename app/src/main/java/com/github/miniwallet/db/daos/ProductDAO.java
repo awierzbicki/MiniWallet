@@ -15,4 +15,5 @@ public interface ProductDAO {
     public void modifyProductPrice(Product product, double newPrice);
     public Map<Date, Double> getPriceHistoryForProduct(Product product);
     public List<Product> getProductsByCategory(Category category);
+    public void modifyProductCategory(Product product, Category category);
 }

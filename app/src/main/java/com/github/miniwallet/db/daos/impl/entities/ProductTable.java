@@ -79,4 +79,8 @@ public class ProductTable extends SugarRecord<ProductTable> implements AbstractT
                 ", category=" + category +
                 '}';
     }
+
+    public void setCategory(CategoryTable category) {
+        this.category = category;
+    }
 }
