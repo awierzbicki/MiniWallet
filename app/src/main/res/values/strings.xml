@@ -4,4 +4,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_maps">Map</string>
+    <string name="inputNewProductHint">Input product name</string>
+    <string name="buyButtonText">Buy it!</string>
+    <string name="priceHint">$</string>
 </resources>

@@ -18,6 +18,7 @@ public class ProductDAOImpl implements ProductDAO {
     public Long insertProduct(Product product) {
         ProductTable productTable = ProductTable.create(product);
         return productTable.getId();
+
     }
 
     @Override
@@ -38,6 +39,7 @@ public class ProductDAOImpl implements ProductDAO {
             productTable.save();
         }
     }
+
 
     @Override
     public Map<Date, Double> getPriceHistoryForProduct(Product product) {
