@@ -1,8 +1,10 @@
 package com.github.miniwallet.db.daos.impl;
 
 import com.github.miniwallet.db.daos.ProductDAO;
+import com.github.miniwallet.db.daos.impl.entities.CategoryTable;
 import com.github.miniwallet.db.daos.impl.entities.PriceTable;
 import com.github.miniwallet.db.daos.impl.entities.ProductTable;
+import com.github.miniwallet.shopping.Category;
 import com.github.miniwallet.shopping.Product;
 import com.google.common.collect.Maps;
 
@@ -47,6 +49,13 @@ public class ProductDAOImpl implements ProductDAO {
             priceByDate.put(new Date(price.getDate()), price.getPrice());
         }
         return priceByDate;
+    }
+
+    @Override
+    public List<Product> getProductsByCategory(Category category) {
+        CategoryTable categoryTable = CategoryTable.create(category);
+        List<ProductTable> products = ProductTable.find(ProductTable.class, "category = ?", categoryTable.getId().toString());
+        return ListUtils.convertList(products);
     }
 
     @Override

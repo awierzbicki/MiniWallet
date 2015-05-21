@@ -1,7 +1,9 @@
 package com.github.miniwallet.db.daos.impl;
 
 import com.github.miniwallet.db.daos.PurchaseDAO;
+import com.github.miniwallet.db.daos.impl.entities.ProductTable;
 import com.github.miniwallet.db.daos.impl.entities.PurchaseTable;
+import com.github.miniwallet.shopping.Product;
 import com.github.miniwallet.shopping.Purchase;
 
 import java.util.Date;
@@ -34,5 +36,12 @@ public class PurchaseDAOImpl implements PurchaseDAO {
     public Long insertPurchase(Purchase purchase) {
         PurchaseTable purchaseTable = PurchaseTable.create(purchase);
         return purchaseTable.getId();
+    }
+
+    @Override
+    public List<Purchase> getPurchasesByProduct(Product product) {
+        ProductTable productTable = ProductTable.create(product);
+        List<PurchaseTable> purchases = PurchaseTable.find(PurchaseTable.class, "product = ?", productTable.getId().toString());
+        return ListUtils.convertList(purchases);
     }
 }

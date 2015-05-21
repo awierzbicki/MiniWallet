@@ -1,5 +1,6 @@
 package com.github.miniwallet.db.daos;
 
+import com.github.miniwallet.shopping.Category;
 import com.github.miniwallet.shopping.Product;
 
 import java.util.Date;
@@ -13,4 +14,5 @@ public interface ProductDAO {
     public void insertAll(List<Product> products);
     public void modifyProductPrice(Product product, double newPrice);
     public Map<Date, Double> getPriceHistoryForProduct(Product product);
+    public List<Product> getProductsByCategory(Category category);
 }

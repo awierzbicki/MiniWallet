@@ -12,8 +12,10 @@ public final class ListUtils {
 
     public static <T> List<T> convertList(List<? extends AbstractTable<T>> productsOrm) {
         List<T> products = new ArrayList<>();
-        for (AbstractTable<T> prod : productsOrm) {
-            products.add(prod.convert());
+        if (productsOrm != null) {
+            for (AbstractTable<T> prod : productsOrm) {
+                products.add(prod.convert());
+            }
         }
         return products;
     }
