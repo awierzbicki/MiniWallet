@@ -2,10 +2,14 @@ package com.github.miniwallet;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,7 +24,11 @@ import com.github.miniwallet.shopping.Product;
 import com.github.miniwallet.shopping.Purchase;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -32,6 +40,9 @@ public class MainActivity extends Activity {
     CategoryDAO categoryDAO;
     PurchaseDAO purchaseDAO;
     Category defaultCategory;
+    MostBuyedProductListAdapter adapter;
+    ArrayList<Product> productList;
+    List<Product> pl;
 
     @InjectView(R.id.button)
     Button exampleButton;
@@ -45,15 +56,39 @@ public class MainActivity extends Activity {
     @InjectView(R.id.textView)
     TextView textView;
 
+    @InjectView(R.id.listView)
+    ListView listView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.inject(this);
+
         productDAO = new ProductDAOImpl();
         categoryDAO = new CategoryDAOImpl();
         purchaseDAO = new PurchaseDAOImpl();
         defaultCategory = new Category("default");
-        ButterKnife.inject(this);
+        productList = (ArrayList)productDAO.getMostBoughtProducts(5);
+        adapter = new MostBuyedProductListAdapter(this, productList);
+        String info = "";
+        String dailyExpences = String.format("%.2f", getDailyExpenses());
+
+        info += "Today : " + dailyExpences;
+        textView.setText((CharSequence) info);
+        
+        listView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                productList = (ArrayList)productDAO.getMostBoughtProducts(5);
+                Product product = productList.get(position);
+                Purchase purchase = new Purchase(product.getLastPrice(), product, new LatLng(1.1, 2.2), new Date());
+                purchaseItem(purchase);
+            }
+        });
     }
 
     @OnClick(R.id.button)
@@ -67,9 +102,7 @@ public class MainActivity extends Activity {
         else
             price = Double.parseDouble(priceText);
         Purchase purchase = new Purchase(price, new Product(defaultCategory, price, name, 0), new LatLng(1.1, 2.2), new Date());
-        purchaseDAO.insertPurchase(purchase);
-        Product newProduct = productDAO.getMostBoughtProducts(1).get(0);
-        textView.setText((CharSequence) (newProduct.getName() + newProduct.getTotalPurchases()));
+        purchaseItem(purchase);
     }
 
 
@@ -93,5 +126,50 @@ public class MainActivity extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public double getWeeklyExpenses() {
+        ArrayList<Purchase> weeklyPurchases;
+        Date now = new Date();
+        Date weekAgo = new Date();
+        double expencesSum = 0;
+        weekAgo.setTime(now.getTime() - 1000*60*60*24*7);
+        weeklyPurchases = (ArrayList) purchaseDAO.getPurchasesBetween(weekAgo, now);
+        for (Purchase p : weeklyPurchases) {
+            Log.i("KASA", Double.toString(p.getPrice()));
+            expencesSum += p.getPrice();
+        }
+        return expencesSum;
+    }
+
+    public double getDailyExpenses() {
+        ArrayList<Purchase> dailyPurchases;
+        Date now = new Date();
+        Calendar c = new GregorianCalendar();
+        double expencesSum = 0;
+
+        c.set(Calendar.HOUR_OF_DAY, 0); //anything 0 - 23
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        Date startOfDay = c.getTime();
+
+        dailyPurchases = (ArrayList) purchaseDAO.getPurchasesBetween(startOfDay, now);
+        for (Purchase p : dailyPurchases) {
+            Log.i("KASA", Double.toString(p.getPrice()));
+            expencesSum += p.getPrice();
+        }
+        return expencesSum;
+    }
+    
+    public void purchaseItem(Purchase purchase) {
+        purchaseDAO.insertPurchase(purchase);
+        productList =(ArrayList) productDAO.getMostBoughtProducts(5);
+        String info = "";
+        String dailyExpenses = String.format("%.2f", getDailyExpenses());
+        info += "Today : " + dailyExpenses;
+        textView.setText((CharSequence) info);
+
+        adapter.clear();
+        adapter.addAll(productList);
     }
 }

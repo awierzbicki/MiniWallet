@@ -1,78 +1,90 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="fill_parent"
+    android:layout_height="fill_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity"
-    android:windowSoftInputMode="adjustPan">
+    android:windowSoftInputMode="adjustResize">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="fill_parent"
+    <ScrollView
+        android:layout_width="wrap_content"
         android:layout_height="fill_parent"
-        android:layout_alignParentEnd="false"
-        android:layout_alignParentStart="false">
+        android:id="@+id/scrollView" >
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:text="New Text"
-            android:id="@+id/textView"
-            android:layout_weight="1" />
-
-        <RelativeLayout
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.8"
-            android:focusableInTouchMode="true"
-            android:focusable="false"
-            android:descendantFocusability="beforeDescendants"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp">
+            android:layout_height="fill_parent"
+            android:layout_alignParentEnd="false"
+            android:layout_alignParentStart="false">
 
-            <EditText
+            <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:id="@+id/editText"
-                android:layout_alignParentTop="false"
-                android:hint="@string/inputNewProductHint"
-                android:selectAllOnFocus="false"
-                android:inputType="textShortMessage"
+                android:layout_height="0dp"
+                android:id="@+id/textView"
+                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:textColor="#ffa74a2e"
+                android:textSize="30dp"
+                android:textColorHighlight="#ffff8040" />
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.8"
+                android:focusableInTouchMode="true"
+                android:focusable="false"
+                android:descendantFocusability="beforeDescendants"
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp" />
+                android:layout_marginBottom="10dp">
 
-            <EditText
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/editText"
+                    android:layout_alignParentTop="false"
+                    android:hint="@string/inputNewProductHint"
+                    android:selectAllOnFocus="false"
+                    android:inputType="textShortMessage"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp" />
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/editText2"
+                    android:hint="@string/priceHint"
+                    android:layout_toRightOf="@+id/editText"
+                    android:minWidth="50dp"
+                    android:inputType="number|numberDecimal"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
+                    android:textAlignment="gravity"
+                    android:gravity="center_vertical|center_horizontal" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/button"
+                    android:layout_alignParentStart="false"
+                    android:layout_alignParentBottom="false"
+                    android:layout_toRightOf="@+id/editText2"
+                    android:text="@string/buyButtonText"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp" />
+
+            </RelativeLayout>
+
+            <ListView
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:id="@+id/editText2"
-                android:hint="@string/priceHint"
-                android:layout_toRightOf="@+id/editText"
-                android:minWidth="50dp"
-                android:inputType="number|numberDecimal"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp" />
+                android:layout_height="340dp"
+                android:id="@+id/listView"
+                android:layout_marginBottom="25dp"
+                android:fastScrollAlwaysVisible="false"
+                android:nestedScrollingEnabled="true" />
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:id="@+id/button"
-                android:layout_alignParentStart="false"
-                android:layout_alignParentBottom="false"
-                android:layout_toRightOf="@+id/editText2"
-                android:text="@string/buyButtonText"
-                android:layout_alignParentRight="true"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp" />
-
-        </RelativeLayout>
-
-        <ListView
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:id="@+id/listView"
-            android:layout_weight="2.5"
-            android:layout_marginBottom="25dp" />
-
-    </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 
 </RelativeLayout>
