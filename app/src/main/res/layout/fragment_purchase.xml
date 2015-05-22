@@ -1,0 +1,57 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.github.miniwallet.shopping.experimental.PurchaseActivity"
+    android:orientation="vertical">
+
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:id="@+id/editText3"
+        android:layout_weight="0.1" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="0px"
+        android:layout_weight="0.12">
+
+        <EditText
+            android:layout_width="0px"
+            android:layout_height="match_parent"
+            android:inputType="numberDecimal"
+            android:ems="10"
+            android:id="@+id/editText5"
+            android:layout_weight="1" />
+
+        <EditText
+            android:layout_width="0px"
+            android:layout_height="match_parent"
+            android:inputType="numberDecimal"
+            android:ems="10"
+            android:id="@+id/editText4"
+            android:layout_weight="1" />
+
+        <Spinner
+            android:layout_width="0px"
+            android:layout_height="match_parent"
+            android:id="@+id/spinner"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/purchaseList"
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_weight="0.75"
+        android:fastScrollAlwaysVisible="false"
+        android:nestedScrollingEnabled="true" />
+
+</LinearLayout>
