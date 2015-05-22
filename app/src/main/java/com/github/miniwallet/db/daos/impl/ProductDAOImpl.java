@@ -64,6 +64,15 @@ public class ProductDAOImpl implements ProductDAO {
         }
     }
 
+    @Override
+    public List<Product> getProductsInPriceRange(double min, double max) {
+        Log.d(TAG, "products in price range (" + min + " - " + max + ")");
+
+        List<ProductTable> productsOrm = ProductTable.find(ProductTable.class, "last_price between ? and ?",
+                String.valueOf(min), String.valueOf(max));
+        return ListUtils.convertList(productsOrm);
+    }
+
 
     @Override
     public Map<Date, Double> getPriceHistoryForProduct(Product product) {

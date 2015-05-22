@@ -17,4 +17,5 @@ public interface ProductDAO {
     public Map<Date, Double> getPriceHistoryForProduct(Product product);
     public List<Product> getProductsByCategory(Category category);
     public void modifyProductCategory(Product product, Category category);
+    public List<Product> getProductsInPriceRange(double min, double max);
 }
