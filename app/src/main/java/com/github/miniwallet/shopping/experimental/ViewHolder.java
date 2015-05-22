@@ -1,10 +1,8 @@
 package com.github.miniwallet.shopping.experimental;
 
-import android.view.View;
 import android.widget.TextView;
 
 import com.github.miniwallet.R;
-import com.github.miniwallet.shopping.Product;
 
 import butterknife.InjectView;
 
@@ -30,9 +28,5 @@ public abstract class ViewHolder {
         }
     }
 
-    public void setComponentsParameters(Object data) {
-        Product p = (Product) data;
-        name.setText(p.getName());
-        price.setText(Double.toString(p.getLastPrice()));
-    }
+    public abstract void setComponentsParameters(Object data);
 }

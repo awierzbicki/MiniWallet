@@ -9,7 +9,6 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 
 public class MainActivity extends FragmentActivity {
-
     private static final int PAGES_NUMBER = 2;
     //@InjectView(R.id.pager)
     ViewPager mPager;
@@ -50,5 +49,6 @@ public class MainActivity extends FragmentActivity {
             return PAGES_NUMBER;
         }
     }
+
 
 }

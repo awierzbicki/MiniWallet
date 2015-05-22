@@ -2,15 +2,12 @@ package com.github.miniwallet.shopping.experimental;
 
 import android.view.View;
 
-import com.github.miniwallet.R;
-
 /**
  * Created by Agnieszka on 2015-05-22.
  */
 public final class ViewHolderFactory {
 
     private ViewHolderFactory() {
-
     }
 
     public static ViewHolder createViewHolder(View view, ViewHolder.Type type) {

@@ -67,8 +67,7 @@ public class MainFragment extends Fragment {
                              Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.inject(this, rootView);
-        String info = "Today : " + String.format("%.2f", getDailyExpenses());
-        textView.setText((CharSequence) info);
+        setActualTotal();
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -80,9 +79,9 @@ public class MainFragment extends Fragment {
             }
         });
         adapter.notifyDataSetChanged();
+        System.out.println("onCreateView");
         return rootView;
     }
-
 
     @Override
     public void onCreate(Bundle savedState) {
@@ -138,12 +137,14 @@ public class MainFragment extends Fragment {
     public void purchaseItem(Purchase purchase) {
         purchaseDAO.insertPurchase(purchase);
         productList = (ArrayList) productDAO.getMostBoughtProducts(5);
-        String info = "";
-        String dailyExpenses = String.format("%.2f", getDailyExpenses());
-        info += "Today : " + dailyExpenses;
-        textView.setText((CharSequence) info);
+        setActualTotal();
 
-        adapter.clear();
-        adapter.addAll(productList);
+        adapter.setNewValues(productList);
     }
+
+    public void setActualTotal() {
+        String info = "Today : " + String.format("%.2f", getDailyExpenses());
+        textView.setText((CharSequence) info);
+    }
+
 }

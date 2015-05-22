@@ -9,5 +9,7 @@
     <string name="buyButtonText">Buy it!</string>
     <string name="priceHint">$</string>
     <string name="title_activity_purchase">PurchaseActivity</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
 
 </resources>

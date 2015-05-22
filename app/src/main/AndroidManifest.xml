@@ -53,6 +53,9 @@
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps"></activity>
+        <activity
+            android:name=".EditProductActivity"
+            android:theme="@android:style/Theme.Holo.Dialog"></activity>
     </application>
 
 </manifest>

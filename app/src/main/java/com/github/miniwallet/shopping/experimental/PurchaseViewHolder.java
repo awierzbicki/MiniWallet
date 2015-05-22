@@ -23,8 +23,9 @@ public class PurchaseViewHolder extends ViewHolder {
 
     @Override
     public void setComponentsParameters(Object data) {
-        super.setComponentsParameters(data);
         Product p = (Product) data;
+        name.setText(p.getName());
+        price.setText(Double.toString(p.getLastPrice()));
         category.setText(p.getCategory().getName());
     }
 }

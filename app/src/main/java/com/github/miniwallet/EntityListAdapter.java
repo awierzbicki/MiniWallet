@@ -5,18 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.TextView;
 
-import com.github.miniwallet.shopping.Product;
-import com.github.miniwallet.shopping.Purchase;
 import com.github.miniwallet.shopping.experimental.ViewHolder;
 import com.github.miniwallet.shopping.experimental.ViewHolderFactory;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 
 public class EntityListAdapter<T> extends ArrayAdapter<T> {
@@ -47,7 +40,7 @@ public class EntityListAdapter<T> extends ArrayAdapter<T> {
         return convertView;
     }
 
-    public void setProducts(List<T> newValues) {
+    public void setNewValues(List<T> newValues) {
         values = newValues;
     }
 }
