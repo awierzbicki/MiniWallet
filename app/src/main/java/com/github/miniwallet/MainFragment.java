@@ -2,7 +2,6 @@ package com.github.miniwallet;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +21,7 @@ import com.github.miniwallet.db.daos.impl.PurchaseDAOImpl;
 import com.github.miniwallet.shopping.Category;
 import com.github.miniwallet.shopping.Product;
 import com.github.miniwallet.shopping.Purchase;
+import com.github.miniwallet.shopping.experimental.ViewHolder;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
@@ -43,9 +43,8 @@ public class MainFragment extends Fragment {
     CategoryDAO categoryDAO;
     PurchaseDAO purchaseDAO;
     Category defaultCategory;
-    ProductListAdapter adapter;
-    ArrayList<Product> productList;
-    List<Product> pl;
+    EntityListAdapter<Product> adapter;
+    List<Product> productList;
 
     @InjectView(R.id.button)
     Button exampleButton;
@@ -74,7 +73,7 @@ public class MainFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                productList = (ArrayList) productDAO.getMostBoughtProducts(5);
+                productList = productDAO.getMostBoughtProducts(5);
                 Product product = productList.get(position);
                 Purchase purchase = new Purchase(product.getLastPrice(), product, new LatLng(1.1, 2.2), new Date());
                 purchaseItem(purchase);
@@ -93,10 +92,9 @@ public class MainFragment extends Fragment {
         categoryDAO = new CategoryDAOImpl();
         purchaseDAO = new PurchaseDAOImpl();
         defaultCategory = new Category("default");
-        productList = (ArrayList) productDAO.getMostBoughtProducts(5);
-        adapter = new ProductListAdapter(getActivity(), productList);
-
-
+        productList = productDAO.getMostBoughtProducts(5);
+        adapter = new EntityListAdapter<>(getActivity(), productList,
+                ViewHolder.Type.BEST_SELLING_ROW);
     }
 
     @OnClick(R.id.button)
@@ -120,12 +118,7 @@ public class MainFragment extends Fragment {
         Date weekAgo = new Date();
         double expencesSum = 0;
         weekAgo.setTime(now.getTime() - 1000 * 60 * 60 * 24 * 7);
-        weeklyPurchases = (ArrayList) purchaseDAO.getPurchasesBetween(weekAgo, now);
-        for (Purchase p : weeklyPurchases) {
-            Log.i("KASA", Double.toString(p.getPrice()));
-            expencesSum += p.getPrice();
-        }
-        return expencesSum;
+        return purchaseDAO.getExpensesBetween(weekAgo, now);
     }
 
     public double getDailyExpenses() {
@@ -139,12 +132,7 @@ public class MainFragment extends Fragment {
         c.set(Calendar.SECOND, 0);
         Date startOfDay = c.getTime();
 
-        dailyPurchases = (ArrayList) purchaseDAO.getPurchasesBetween(startOfDay, now);
-        for (Purchase p : dailyPurchases) {
-            Log.i("KASA", Double.toString(p.getPrice()));
-            expencesSum += p.getPrice();
-        }
-        return expencesSum;
+        return purchaseDAO.getExpensesBetween(startOfDay, now);
     }
 
     public void purchaseItem(Purchase purchase) {

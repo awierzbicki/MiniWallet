@@ -17,7 +17,6 @@ public class BestSellingViewHolder extends ViewHolder {
     TextView category;
 
     public BestSellingViewHolder(View view) {
-        super(view);
         ButterKnife.inject(this, view);
     }
 

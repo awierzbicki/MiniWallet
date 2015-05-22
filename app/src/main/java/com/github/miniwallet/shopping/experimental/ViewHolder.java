@@ -17,8 +17,17 @@ public abstract class ViewHolder {
     @InjectView(R.id.price)
     TextView price;
 
-    public ViewHolder(View view) {
-        //ButterKnife.inject(this, view);
+    public enum Type {
+        BEST_SELLING_ROW(R.layout.best_selling_row), PURCHASE_ROW(R.layout.purchase_row);
+        private final int layoutId;
+
+        private Type(int layoutId) {
+            this.layoutId = layoutId;
+        }
+
+        public int getLayoutId() {
+            return layoutId;
+        }
     }
 
     public void setComponentsParameters(Object data) {

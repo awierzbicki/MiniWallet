@@ -7,23 +7,13 @@ import com.github.miniwallet.R;
 /**
  * Created by Agnieszka on 2015-05-22.
  */
-public class ViewHolderFactory {
+public final class ViewHolderFactory {
 
-    public enum ViewHolderType {
-        BEST_SELLING_ROW(R.layout.best_selling_row), PURCHASE_ROW(R.layout.purchase_row);
-        private final int layoutId;
+    private ViewHolderFactory() {
 
-        private ViewHolderType(int layoutId) {
-            this.layoutId = layoutId;
-        }
-
-        public int getLayoutId() {
-            return layoutId;
-        }
     }
 
-
-    public ViewHolder createViewHolder(View view, ViewHolderType type) {
+    public static ViewHolder createViewHolder(View view, ViewHolder.Type type) {
         switch (type) {
             case BEST_SELLING_ROW:
                 return new BestSellingViewHolder(view);

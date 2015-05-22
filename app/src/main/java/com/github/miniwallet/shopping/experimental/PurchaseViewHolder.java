@@ -18,7 +18,6 @@ public class PurchaseViewHolder extends ViewHolder {
     TextView category;
 
     public PurchaseViewHolder(View view) {
-        super(view);
         ButterKnife.inject(this, view);
     }
 
