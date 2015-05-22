@@ -1,5 +1,7 @@
 package com.github.miniwallet.db.daos.impl;
 
+import android.util.Log;
+
 import com.github.miniwallet.db.daos.ProductDAO;
 import com.github.miniwallet.db.daos.impl.entities.CategoryTable;
 import com.github.miniwallet.db.daos.impl.entities.PriceTable;
@@ -13,9 +15,12 @@ import java.util.List;
 import java.util.Map;
 
 public class ProductDAOImpl implements ProductDAO {
+    private final static String TAG = "ProductDAO";
 
     @Override
     public Long insertProduct(Product product) {
+        Log.d(TAG, "Inserting " + product.toString());
+
         ProductTable productTable = ProductTable.create(product);
         return productTable.getId();
 
@@ -23,6 +28,8 @@ public class ProductDAOImpl implements ProductDAO {
 
     @Override
     public void insertAll(List<Product> products) {
+        Log.d(TAG, "Inserting " + products.toString());
+
         for(Product product : products) {
             insertProduct(product);
         }
@@ -30,6 +37,8 @@ public class ProductDAOImpl implements ProductDAO {
 
     @Override
     public void modifyProductPrice(Product product, double newPrice) {
+        Log.d(TAG, "Modyfing products " + product.toString() + " price to " + newPrice);
+
         ProductTable productTable =  ProductTable.getTableRepresentation(product);
         if(productTable == null) {
             throw new RuntimeException("Can't modify product that hasn't been inserted");
@@ -42,6 +51,8 @@ public class ProductDAOImpl implements ProductDAO {
 
     @Override
     public void modifyProductCategory(Product product, Category category) {
+        Log.d(TAG, "Modyfing products " + product.toString() + " category to " + category.toString());
+
         ProductTable productTable =  ProductTable.getTableRepresentation(product);
         CategoryTable categoryTable = CategoryTable.create(category);
         if(productTable == null) {
@@ -56,6 +67,7 @@ public class ProductDAOImpl implements ProductDAO {
 
     @Override
     public Map<Date, Double> getPriceHistoryForProduct(Product product) {
+        Log.d(TAG, "price history for product " + product.toString());
         Map<Date, Double> priceByDate = Maps.newHashMap();
         List<PriceTable> prices = PriceTable.find(PriceTable.class, "product = ?",
                 ProductTable.create(product).getId().toString());
@@ -68,6 +80,7 @@ public class ProductDAOImpl implements ProductDAO {
 
     @Override
     public List<Product> getProductsByCategory(Category category) {
+        Log.d(TAG, "get products by category  " + category.toString());
         CategoryTable categoryTable = CategoryTable.create(category);
         List<ProductTable> products = ProductTable.find(ProductTable.class, "category = ?", categoryTable.getId().toString());
         return ListUtils.convertList(products);
@@ -75,6 +88,7 @@ public class ProductDAOImpl implements ProductDAO {
 
     @Override
     public Product getProductByName(String name) {
+        Log.d(TAG, "get product " + name);
         List<ProductTable> product = ProductTable.find(ProductTable.class, "name = ?", name);
 
         return product.isEmpty() ? null : product.get(0).convert();
@@ -82,8 +96,17 @@ public class ProductDAOImpl implements ProductDAO {
 
     @Override
     public List<Product> getMostBoughtProducts(int count) {
+        Log.d(TAG, "get " + count + " most bought products");
         List<ProductTable> productsOrm = ProductTable.find(ProductTable.class, null, null, null,
                 "total_Purchases DESC", String.valueOf(count));
+
+        return ListUtils.convertList(productsOrm);
+    }
+
+    @Override
+    public List<Product> getAllProducts() {
+        Log.d(TAG, "get all products");
+        List<ProductTable> productsOrm = ProductTable.listAll(ProductTable.class);
 
         return ListUtils.convertList(productsOrm);
     }

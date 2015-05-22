@@ -12,4 +12,6 @@ public interface PurchaseDAO {
     public List<Purchase> getPurchasesBetween(Date start, Date end);
     public Long insertPurchase(Purchase purchase);
     public List<Purchase> getPurchasesByProduct(Product product);
+    public double getExpensesFrom(Date start);
+    public double getExpensesBetween(Date start, Date end);
 }

@@ -6,7 +6,7 @@ import com.orm.SugarRecord;
 import java.util.List;
 
 public class PriceTable extends SugarRecord<PriceTable> {
-    ProductTable product;
+    long product;
     double price;
     long date;
 
@@ -14,13 +14,13 @@ public class PriceTable extends SugarRecord<PriceTable> {
     }
 
     public PriceTable(ProductTable product, double price, long date) {
-        this.product = product;
+        this.product = product.getId();
         this.price = price;
         this.date = date;
     }
 
     public ProductTable getProduct() {
-        return product;
+        return ProductTable.findById(ProductTable.class, product);
     }
 
     public double getPrice() {
@@ -28,11 +28,4 @@ public class PriceTable extends SugarRecord<PriceTable> {
     }
 
     public long getDate() { return date; }
-
-    public static PriceTable getTableRepresentation(Product product, double price) {
-        List<PriceTable> priceTable = PriceTable.find(PriceTable.class, "product = ? and price = ?",
-                product.getId().toString(), String.valueOf(price));
-
-        return priceTable.isEmpty() ? null : priceTable.get(0);
-    }
 }

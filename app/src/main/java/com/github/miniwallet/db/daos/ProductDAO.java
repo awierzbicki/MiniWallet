@@ -9,6 +9,7 @@ import java.util.Map;
 
 public interface ProductDAO {
     public List<Product> getMostBoughtProducts(int count);
+    public List<Product> getAllProducts();
     public Long insertProduct(Product product);
     public Product getProductByName(String name);
     public void insertAll(List<Product> products);

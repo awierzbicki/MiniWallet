@@ -7,19 +7,11 @@ import com.orm.SugarRecord;
 import java.util.Date;
 
 public class PurchaseTable extends SugarRecord<PurchaseTable> implements AbstractTable<Purchase> {
-    PriceTable price;
-    ProductTable product;
+    long price;
+    long product;
     double lat;
     double lng;
     long date;
-
-    public PurchaseTable(PriceTable price, ProductTable product, LatLng location, Date date) {
-        this.price = price;
-        this.product = product;
-        this.lat = location.latitude;
-        this.lng = location.longitude;
-        this.date = date.getTime();
-    }
 
     public PurchaseTable() {
     }
@@ -28,8 +20,8 @@ public class PurchaseTable extends SugarRecord<PurchaseTable> implements Abstrac
         ProductTable productTable = extractProductTable(purchase);
         PriceTable priceTable = extractPriceTable(purchase, productTable);
 
-        this.product = productTable;
-        this.price = priceTable;
+        this.product = productTable.getId();
+        this.price = priceTable.getId();
         this.date = purchase.getDate().getTime();
         this.lat = purchase.getLocation().latitude;
         this.lng = purchase.getLocation().longitude;
@@ -38,6 +30,7 @@ public class PurchaseTable extends SugarRecord<PurchaseTable> implements Abstrac
     private ProductTable extractProductTable(Purchase purchase) {
         ProductTable productTable = ProductTable.create(purchase.getProduct());
         productTable.incrementTotalPurchases();
+        productTable.setLastPrice(purchase.getPrice());
         productTable.save();
 
         purchase.getProduct().setTotalPurchases(productTable.getTotalPurchases());
@@ -46,25 +39,24 @@ public class PurchaseTable extends SugarRecord<PurchaseTable> implements Abstrac
     }
 
     private PriceTable extractPriceTable(Purchase purchase, ProductTable productTable) {
-        PriceTable priceTable = PriceTable.getTableRepresentation(purchase.getProduct(), purchase.getPrice());
-        if (priceTable == null) {
-            priceTable = new PriceTable(productTable, purchase.getPrice(), purchase.getDate().getTime());
-            priceTable.save();
-        }
+        PriceTable priceTable = new PriceTable(productTable, purchase.getPrice(), purchase.getDate().getTime());
+        priceTable.save();
+
         return priceTable;
     }
 
     public Purchase convert() {
-        return new Purchase(getId(), price.getPrice(), product.convert(), new LatLng(lat, lng),
+        return new Purchase(getId(), getPrice().getPrice(), getProduct().convert(), new LatLng(lat, lng),
                 new Date(date));
     }
 
+
     public PriceTable getPrice() {
-        return price;
+        return PriceTable.findById(PriceTable.class, price);
     }
 
     public ProductTable getProduct() {
-        return product;
+        return ProductTable.findById(ProductTable.class, product);
     }
 
     public LatLng getLocation() {
