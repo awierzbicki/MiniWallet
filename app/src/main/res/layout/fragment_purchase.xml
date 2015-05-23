@@ -14,11 +14,11 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="0px"
-        android:id="@+id/editText3"
+        android:id="@+id/search_edit_text"
         android:layout_weight="0.1"
-        android:text="cokolwiek"
         android:textAlignment="gravity"
-        android:gravity="bottom|end" />
+        android:gravity="bottom|end"
+        android:hint="search" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -26,6 +26,14 @@
         android:layout_height="0px"
         android:layout_weight="0.12"
         android:weightSum="1">
+
+        <Spinner
+            android:layout_width="0px"
+            android:layout_height="match_parent"
+            android:id="@+id/spinnerCategory"
+            android:layout_weight="0.6"
+            android:gravity="left"
+            android:textAlignment="gravity" />
 
         <EditText
             android:layout_width="0px"
@@ -49,14 +57,6 @@
             android:textAlignment="gravity"
             android:gravity="bottom|right"
             android:hint="max" />
-
-        <Spinner
-            android:layout_width="0px"
-            android:layout_height="match_parent"
-            android:id="@+id/spinnerCategory"
-            android:layout_weight="0.6"
-            android:gravity="left"
-            android:textAlignment="gravity" />
 
     </LinearLayout>
 

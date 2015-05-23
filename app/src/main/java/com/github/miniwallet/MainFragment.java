@@ -138,8 +138,7 @@ public class MainFragment extends Fragment {
         purchaseDAO.insertPurchase(purchase);
         productList = (ArrayList) productDAO.getMostBoughtProducts(5);
         setActualTotal();
-
-        adapter.setNewValues(productList);
+        adapter.setNewValuesAndNotify(productList);
     }
 
     public void setActualTotal() {

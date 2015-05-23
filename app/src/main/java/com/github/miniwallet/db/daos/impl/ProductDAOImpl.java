@@ -30,7 +30,7 @@ public class ProductDAOImpl implements ProductDAO {
     public void insertAll(List<Product> products) {
         Log.d(TAG, "Inserting " + products.toString());
 
-        for(Product product : products) {
+        for (Product product : products) {
             insertProduct(product);
         }
     }
@@ -39,8 +39,8 @@ public class ProductDAOImpl implements ProductDAO {
     public void modifyProductPrice(Product product, double newPrice) {
         Log.d(TAG, "Modyfing products " + product.toString() + " price to " + newPrice);
 
-        ProductTable productTable =  ProductTable.getTableRepresentation(product);
-        if(productTable == null) {
+        ProductTable productTable = ProductTable.getTableRepresentation(product);
+        if (productTable == null) {
             throw new RuntimeException("Can't modify product that hasn't been inserted");
         } else {
             productTable.setLastPrice(newPrice);
@@ -53,9 +53,9 @@ public class ProductDAOImpl implements ProductDAO {
     public void modifyProductCategory(Product product, Category category) {
         Log.d(TAG, "Modyfing products " + product.toString() + " category to " + category.toString());
 
-        ProductTable productTable =  ProductTable.getTableRepresentation(product);
+        ProductTable productTable = ProductTable.getTableRepresentation(product);
         CategoryTable categoryTable = CategoryTable.create(category);
-        if(productTable == null) {
+        if (productTable == null) {
             throw new RuntimeException("Can't modify product that hasn't been inserted");
         } else {
             productTable.setCategory(categoryTable);
@@ -73,6 +73,13 @@ public class ProductDAOImpl implements ProductDAO {
         return ListUtils.convertList(productsOrm);
     }
 
+    @Override
+    public Double getHighestPrice() {
+        List<ProductTable> productsOrm = ProductTable.find(ProductTable.class, null, null, null,
+                "last_price DESC", String.valueOf(1));
+        return productsOrm.isEmpty() ? null : productsOrm.get(0).getLastPrice();
+    }
+
 
     @Override
     public Map<Date, Double> getPriceHistoryForProduct(Product product) {
@@ -81,7 +88,7 @@ public class ProductDAOImpl implements ProductDAO {
         List<PriceTable> prices = PriceTable.find(PriceTable.class, "product = ?",
                 ProductTable.create(product).getId().toString());
 
-        for(PriceTable price : prices) {
+        for (PriceTable price : prices) {
             priceByDate.put(new Date(price.getDate()), price.getPrice());
         }
         return priceByDate;

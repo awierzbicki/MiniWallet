@@ -26,17 +26,8 @@
             android:text="10 $"
             android:id="@+id/price"
             android:layout_alignParentTop="true"
-            android:layout_toLeftOf="@+id/buttonBuy"
+            android:layout_alignParentRight="true"
             android:textSize="40dp" />
-        <!--android:layout_alignParentRight="true"-->
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Buy"
-            android:id="@+id/buttonBuy"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true" />
 
         <TextView
             android:layout_width="wrap_content"

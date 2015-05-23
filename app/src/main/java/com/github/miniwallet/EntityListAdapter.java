@@ -14,7 +14,7 @@ import java.util.List;
 
 public class EntityListAdapter<T> extends ArrayAdapter<T> {
     private final Context context;
-    private List<T> values;
+    protected List<T> values;
     private ViewHolder.Type viewHolderType;
 
     public EntityListAdapter(Context context, List<T> values, ViewHolder.Type type) {
@@ -35,12 +35,19 @@ public class EntityListAdapter<T> extends ArrayAdapter<T> {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-
         holder.setComponentsParameters(values.get(position));
         return convertView;
     }
 
-    public void setNewValues(List<T> newValues) {
-        values = newValues;
+    @Override
+    public int getCount() {
+        return values != null ? values.size() : 0;
     }
+
+    public void setNewValuesAndNotify(List<T> newValues) {
+        values = newValues;
+        notifyDataSetChanged();
+    }
+
+
 }

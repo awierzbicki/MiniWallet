@@ -9,13 +9,24 @@ import java.util.Map;
 
 public interface ProductDAO {
     public List<Product> getMostBoughtProducts(int count);
+
     public List<Product> getAllProducts();
+
     public Long insertProduct(Product product);
+
     public Product getProductByName(String name);
+
     public void insertAll(List<Product> products);
+
     public void modifyProductPrice(Product product, double newPrice);
+
     public Map<Date, Double> getPriceHistoryForProduct(Product product);
+
     public List<Product> getProductsByCategory(Category category);
+
     public void modifyProductCategory(Product product, Category category);
+
     public List<Product> getProductsInPriceRange(double min, double max);
+
+    public Double getHighestPrice();
 }
