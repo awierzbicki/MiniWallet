@@ -41,11 +41,7 @@ public class ProductListFilterableAdapter extends EntityListAdapter<Product> imp
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            if (results.count == 0)
-                notifyDataSetInvalidated();
-            else {
-                setNewValuesAndNotify((List<Product>) results.values);
-            }
+            setNewValuesAndNotify((List<Product>) results.values);
         }
     }
 

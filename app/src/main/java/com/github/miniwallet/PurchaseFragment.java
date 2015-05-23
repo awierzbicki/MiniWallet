@@ -107,7 +107,7 @@ public class PurchaseFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         System.out.println(requestCode + " " + resultCode);
-        productList = productDAO.getAllProducts();
+        productList = getMatchingProducts(categorySpinner.getSelectedItemPosition());
         adapter.setNewValuesAndNotify(productList);
         adapter.notifyDataSetChanged();
     }
@@ -126,7 +126,8 @@ public class PurchaseFragment extends Fragment {
     @OnTextChanged(R.id.search_edit_text)
     public void onTextChanged(CharSequence s) {
         if (s.length() <= inputNameLastLength) {
-            adapter.setNewValuesAndNotify(productDAO.getAllProducts());
+            productList = getMatchingProducts(categorySpinner.getSelectedItemPosition());
+            adapter.setNewValuesAndNotify(productList);
         } else {
             adapter.getFilter().filter(s.toString());
         }
@@ -134,13 +135,8 @@ public class PurchaseFragment extends Fragment {
 
     @OnItemSelected(R.id.spinnerCategory)
     public void onItemSelected(int position) {
-        if (position == CATEGORY_ALL_POSITION) {
-            productList = productDAO.getProductsInPriceRange(minPrice, maxPrice);
-        } else {
-            productList = productDAO.getProductsByCategory(categoryDAO.getCategoryByName(categories.get(position)));
-        }
+        productList = getMatchingProducts(position);
         adapter.setNewValuesAndNotify(productList);
-        //adapter.notifyDataSetChanged();
     }
 
 //
@@ -192,7 +188,7 @@ public class PurchaseFragment extends Fragment {
                 editMinPrice.setText(String.format("%.2f", minPrice));
             }
         }
-        productList = productDAO.getProductsInPriceRange(minPrice, maxPrice);
+        productList = getMatchingProducts(categorySpinner.getSelectedItemPosition());
         adapter.setNewValuesAndNotify(productList);
     }
 
@@ -208,7 +204,7 @@ public class PurchaseFragment extends Fragment {
                 editMaxPrice.setText(String.format("%.2f", maxPrice));
             }
         }
-        productList = productDAO.getProductsInPriceRange(minPrice, maxPrice);
+        productList = getMatchingProducts(categorySpinner.getSelectedItemPosition());
         adapter.setNewValuesAndNotify(productList);
     }
 
@@ -240,4 +236,11 @@ public class PurchaseFragment extends Fragment {
 //        adapter.setNewValuesAndNotify(productList);
 //    }
 
+    private List<Product> getMatchingProducts(int categoryPosition) {
+        if (categoryPosition == CATEGORY_ALL_POSITION) {
+            return productDAO.getProductsInPriceRange(minPrice, maxPrice);
+        } else {
+            return productDAO.getProductsByCategoryInPriceRange(categoryDAO.getCategoryByName(categories.get(categoryPosition)), minPrice, maxPrice);
+        }
+    }
 }

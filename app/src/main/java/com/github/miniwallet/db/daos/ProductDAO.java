@@ -28,5 +28,7 @@ public interface ProductDAO {
 
     public List<Product> getProductsInPriceRange(double min, double max);
 
+    public List<Product> getProductsByCategoryInPriceRange(Category category, double min, double max);
+
     public Double getHighestPrice();
 }

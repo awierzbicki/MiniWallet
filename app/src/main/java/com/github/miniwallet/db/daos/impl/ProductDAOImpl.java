@@ -74,6 +74,14 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     @Override
+    public List<Product> getProductsByCategoryInPriceRange(Category category, double min, double max) {
+        CategoryTable categoryTable = CategoryTable.create(category);
+        List<ProductTable> productsOrm = ProductTable.find(ProductTable.class, "category = ? and last_price between ? and ?",
+                categoryTable.getId().toString(), String.valueOf(min), String.valueOf(max));
+        return ListUtils.convertList(productsOrm);
+    }
+
+    @Override
     public Double getHighestPrice() {
         List<ProductTable> productsOrm = ProductTable.find(ProductTable.class, null, null, null,
                 "last_price DESC", String.valueOf(1));
