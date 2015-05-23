@@ -71,7 +71,10 @@ public class PurchaseFragment extends Fragment {
         productList = productDAO.getAllProducts();
         categories = categoryDAO.getAllCategoriesNames();
         adapter = new ProductListFilterableAdapter(getActivity(), productList);
-        maxPrice = productDAO.getHighestPrice();
+        if(productDAO.getHighestPrice() != null)
+            maxPrice = productDAO.getHighestPrice();
+        else
+            maxPrice = 0.0d;
     }
 
     @Override
