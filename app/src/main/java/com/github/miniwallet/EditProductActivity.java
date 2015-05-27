@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -25,7 +26,7 @@ import butterknife.InjectView;
  * Created by Agnieszka on 2015-05-22.
  */
 public class EditProductActivity extends Activity {
-    @InjectView(R.id.productName)
+    @InjectView(R.id.newCategory)
     TextView productName;
     @InjectView(R.id.editProductPrice)
     EditText productPrice;
@@ -40,7 +41,9 @@ public class EditProductActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_edit_purchase);
+
         ButterKnife.inject(this);
         productDAO = new ProductDAOImpl();
         System.out.println(getIntent().getStringExtra("ProductName") + ", ");

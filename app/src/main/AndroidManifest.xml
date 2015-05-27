@@ -27,7 +27,6 @@
             android:windowSoftInputMode="adjustPan">
         <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -54,8 +53,14 @@
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps"></activity>
+
         <activity
             android:name=".EditProductActivity"
+            android:theme="@android:style/Theme.Holo.Dialog"
+            android:excludeFromRecents="true"></activity>
+
+        <activity
+            android:name=".AddCategoryActivity"
             android:theme="@android:style/Theme.Holo.Dialog"
             android:excludeFromRecents="true"></activity>
     </application>

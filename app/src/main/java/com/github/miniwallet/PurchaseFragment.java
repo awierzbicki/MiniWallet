@@ -111,8 +111,9 @@ public class PurchaseFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         System.out.println(requestCode + " " + resultCode);
         productList = getMatchingProducts(categorySpinner.getSelectedItemPosition());
-        adapter.setNewValuesAndNotify(productList);
         adapter.notifyDataSetChanged();
+        adapter.setNewValuesAndNotify(productList);
+
     }
 
     private class EditItemListener implements AdapterView.OnItemLongClickListener {
