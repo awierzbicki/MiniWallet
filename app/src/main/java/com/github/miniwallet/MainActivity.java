@@ -12,9 +12,6 @@ import android.view.Window;
 
 import com.github.mikephil.charting.utils.Utils;
 
-import com.github.miniwallet.shopping.history.HistoryFragment;
-import com.github.miniwallet.shopping.purchase.PurchaseFragment;
-
 public class MainActivity extends FragmentActivity {
     private static final int PAGES_NUMBER = 4;
     //@InjectView(R.id.pager)
