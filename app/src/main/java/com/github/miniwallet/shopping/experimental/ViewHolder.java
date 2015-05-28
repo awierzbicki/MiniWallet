@@ -10,7 +10,7 @@ import butterknife.InjectView;
  * Created by Agnieszka on 2015-05-22.
  */
 public abstract class ViewHolder {
-    @InjectView(R.id.productName)
+    @InjectView(R.id.newCategory)
     TextView name;
     @InjectView(R.id.price)
     TextView price;

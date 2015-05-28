@@ -71,7 +71,10 @@ public class PurchaseFragment extends Fragment {
         productList = productDAO.getAllProducts();
         categories = categoryDAO.getAllCategoriesNames();
         adapter = new ProductListFilterableAdapter(getActivity(), productList);
-        maxPrice = productDAO.getHighestPrice();
+        if(productDAO.getHighestPrice() != null)
+            maxPrice = productDAO.getHighestPrice();
+        else
+            maxPrice = 0.0d;
     }
 
     @Override
@@ -108,8 +111,9 @@ public class PurchaseFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         System.out.println(requestCode + " " + resultCode);
         productList = getMatchingProducts(categorySpinner.getSelectedItemPosition());
-        adapter.setNewValuesAndNotify(productList);
         adapter.notifyDataSetChanged();
+        adapter.setNewValuesAndNotify(productList);
+
     }
 
     private class EditItemListener implements AdapterView.OnItemLongClickListener {

@@ -1,14 +1,17 @@
 package com.github.miniwallet;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,34 +36,32 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import butterknife.OnItemSelected;
 
-/**
- * Created by Agnieszka on 2015-05-22.
- */
 public class MainFragment extends Fragment {
 
-    ProductDAO productDAO;
-    CategoryDAO categoryDAO;
-    PurchaseDAO purchaseDAO;
-    Category defaultCategory;
-    EntityListAdapter<Product> adapter;
-    List<Product> productList;
+    public static final String NEW_CATEGORY= "New category...";
+    public static final int ADD = 0;
 
-    @InjectView(R.id.button)
-    Button exampleButton;
+    private EntityListAdapter<Product> adapter;
+    private ProductDAO productDAO;
+    private CategoryDAO categoryDAO;
+    private PurchaseDAO purchaseDAO;
+    private Category defaultCategory;
+    private List<Product> productList;
+    private ArrayList<String> categories;
+    private ArrayAdapter<String> adapterState;
 
     @InjectView(R.id.editText)
     EditText editText;
-
     @InjectView(R.id.editText2)
     EditText editText2;
-
     @InjectView(R.id.textView)
     TextView textView;
-
     @InjectView(R.id.listView)
     ListView listView;
-
+    @InjectView(R.id.spinner)
+    Spinner spinner;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -78,6 +79,15 @@ public class MainFragment extends Fragment {
                 purchaseItem(purchase);
             }
         });
+        adapterState = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, categories);
+        adapterState.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapterState);
+        spinner.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int arg2, long arg3) {
+                Toast.makeText(getActivity(), "!", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
         adapter.notifyDataSetChanged();
         System.out.println("onCreateView");
         return rootView;
@@ -91,13 +101,18 @@ public class MainFragment extends Fragment {
         categoryDAO = new CategoryDAOImpl();
         purchaseDAO = new PurchaseDAOImpl();
         defaultCategory = new Category("default");
+        categoryDAO.insertCategory(defaultCategory);
         productList = productDAO.getMostBoughtProducts(5);
         adapter = new EntityListAdapter<>(getActivity(), productList,
                 ViewHolder.Type.BEST_SELLING_ROW);
+        adapterState = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_spinner_dropdown_item, categories);
+        categories = categoryDAO.getAllCategoriesNames();
+        categories.add(NEW_CATEGORY);
     }
 
     @OnClick(R.id.button)
-    public void onExampleButtonClick(Button button) {
+    public void onClick(Button button) {
         Toast.makeText(getActivity(), editText.getText().toString(), Toast.LENGTH_SHORT).show();
         String name = editText.getText().toString();
         String priceText = editText2.getText().toString();
@@ -106,10 +121,37 @@ public class MainFragment extends Fragment {
             price = 0;
         else
             price = Double.parseDouble(priceText);
-        Purchase purchase = new Purchase(price, new Product(defaultCategory, price, name, 0), new LatLng(1.1, 2.2), new Date());
+        Purchase purchase = new Purchase(price, new Product(new Category((String)spinner.getSelectedItem()), price, name, 0), new LatLng(1.1, 2.2), new Date());
         purchaseItem(purchase);
     }
 
+    @OnItemSelected(R.id.spinner)
+    public void onItemSelected(int position) {
+        if(spinner.getSelectedItem().equals(NEW_CATEGORY)) {
+            Toast.makeText(getActivity(), "nowa...", Toast.LENGTH_SHORT).show();
+            Intent intent  = new Intent(getActivity(), AddCategoryActivity.class);
+            startActivityForResult(intent, ADD);
+        }
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == ADD && resultCode == AddCategoryActivity.OK) {
+            String result = data.getStringExtra(AddCategoryActivity.CATEGORY);
+            Category category = new Category(result);
+            categoryDAO.insertCategory(category);
+            categories.remove(categories.size() - 1);
+            categories.add(result);
+            categories.add(NEW_CATEGORY);
+            adapterState.notifyDataSetChanged();
+            Toast.makeText(getActivity(), "DODANO: " + result, Toast.LENGTH_SHORT).show();
+        }
+        if (requestCode == ADD && resultCode == AddCategoryActivity.CANCEL) {
+            spinner.setSelection(0);
+        }
+    }
 
     public double getWeeklyExpenses() {
         ArrayList<Purchase> weeklyPurchases;
@@ -136,6 +178,10 @@ public class MainFragment extends Fragment {
 
     public void purchaseItem(Purchase purchase) {
         purchaseDAO.insertPurchase(purchase);
+        updateList();
+    }
+
+    public void updateList() {
         productList = (ArrayList) productDAO.getMostBoughtProducts(5);
         setActualTotal();
         adapter.setNewValuesAndNotify(productList);
