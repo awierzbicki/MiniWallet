@@ -26,4 +26,9 @@ dependencies {
     compile 'com.google.android.gms:play-services:6.5.87'
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile group: 'com.google.guava', name: 'guava', version: '18.0'
+    compile 'com.github.PhilJay:MPAndroidChart:v2.1.0'
+}
+
+repositories {
+    maven { url "https://jitpack.io" }
 }
