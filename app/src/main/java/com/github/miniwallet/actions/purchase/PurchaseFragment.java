@@ -1,0 +1,164 @@
+package com.github.miniwallet.actions.purchase;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.Spinner;
+
+import com.github.miniwallet.EditProductActivity;
+import com.github.miniwallet.adapters.FilterableEntityListAdapter;
+import com.github.miniwallet.R;
+import com.github.miniwallet.db.daos.CategoryDAO;
+import com.github.miniwallet.db.daos.ProductDAO;
+import com.github.miniwallet.db.daos.PurchaseDAO;
+import com.github.miniwallet.db.daos.impl.CategoryDAOImpl;
+import com.github.miniwallet.db.daos.impl.ProductDAOImpl;
+import com.github.miniwallet.db.daos.impl.PurchaseDAOImpl;
+import com.github.miniwallet.filters.ComplexFilter;
+import com.github.miniwallet.filters.ProductCategoryFilter;
+import com.github.miniwallet.filters.ProductMaxPriceFilter;
+import com.github.miniwallet.filters.ProductMinPriceFilter;
+import com.github.miniwallet.filters.ProductNameFilter;
+import com.github.miniwallet.shopping.Product;
+import com.github.miniwallet.shopping.Purchase;
+import com.github.miniwallet.shopping.experimental.ViewHolder;
+import com.google.android.gms.maps.model.LatLng;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.OnItemSelected;
+import butterknife.OnTextChanged;
+
+/**
+ * Created by Agnieszka on 2015-05-22.
+ */
+public class PurchaseFragment extends Fragment implements AdapterView.OnItemClickListener {
+    public static final int EDIT = 0;
+    private static final int CATEGORY_ALL_POSITION = 0;
+    private ProductDAO productDAO;
+    private CategoryDAO categoryDAO;
+    private PurchaseDAO purchaseDAO;
+
+    private FilterableEntityListAdapter<Product> adapter;
+    private List<Product> productList;
+    private ArrayList<String> categories;
+
+    @InjectView(R.id.search_edit_text)
+    EditText searchText;
+    @InjectView(R.id.purchaseList)
+    ListView listView;
+    @InjectView(R.id.editMinPrice)
+    EditText editMinPrice;
+    @InjectView(R.id.editMaxPrice)
+    EditText editMaxPrice;
+    @InjectView(R.id.spinnerCategory)
+    Spinner categorySpinner;
+
+    private ProductNameFilter productNameFilter;
+    private ProductCategoryFilter productCategoryFilter;
+    private ProductMinPriceFilter productMinPriceFilter;
+    private ProductMaxPriceFilter productMaxPriceFilter;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        productDAO = new ProductDAOImpl();
+        categoryDAO = new CategoryDAOImpl();
+        purchaseDAO = new PurchaseDAOImpl();
+
+        productList = productDAO.getAllProducts();
+        categories = categoryDAO.getAllCategoriesNames();
+        categories.add(CATEGORY_ALL_POSITION, "All");
+
+        ComplexFilter<Product> filter = setUpFilter();
+        adapter = new FilterableEntityListAdapter<>(getActivity(), productList, ViewHolder.Type.PURCHASE_ROW, filter);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_purchase, container, false);
+        ButterKnife.inject(this, rootView);
+        listView.setAdapter(adapter);
+        listView.setOnItemLongClickListener(new EditItemListener());
+        listView.setOnItemClickListener(this);
+
+        categories.add(CATEGORY_ALL_POSITION, "All");
+        ArrayAdapter<String> adapterState = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_spinner_dropdown_item, categories);
+        adapterState.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        categorySpinner.setAdapter(adapterState);
+        listView.setTextFilterEnabled(true);
+
+        addPriceTextListeners();
+
+        return rootView;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        System.out.println(requestCode + " " + resultCode);
+
+        productCategoryFilter.setCategories(categoryDAO.getCategoryByName(categories.get(categorySpinner.getSelectedItemPosition())));
+        productList = productDAO.getAllProducts();
+        adapter.setNewValuesAndNotify(productList);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Product product = productList.get(position);
+        Purchase purchase = new Purchase(product.getLastPrice(), product, new LatLng(1.1, 2.2), new Date());
+        purchaseDAO.insertPurchase(purchase);
+    }
+
+    private class EditItemListener implements AdapterView.OnItemLongClickListener {
+
+        @Override
+        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            Product product = adapter.getItem(position);
+            Intent intent = new Intent(getActivity(), EditProductActivity.class);
+            intent.putExtra("ProductName", product.getName());
+            startActivityForResult(intent, EDIT);
+            return true;
+        }
+    }
+    @OnTextChanged(R.id.search_edit_text)
+    public void onTextChanged(CharSequence s) {
+        productNameFilter.setPattern(searchText.getText().toString());
+        adapter.filterAndNotify();
+    }
+
+    @OnItemSelected(R.id.spinnerCategory)
+    public void onItemSelected(int position) {
+        productCategoryFilter.setCategories(categoryDAO.getCategoryByName(categories.get(position)));
+        adapter.setNewValuesAndNotify(productList);
+    }
+
+    private ComplexFilter<Product> setUpFilter() {
+        productNameFilter = new ProductNameFilter();
+        productCategoryFilter = new ProductCategoryFilter();
+
+        productMinPriceFilter = new ProductMinPriceFilter();
+        productMaxPriceFilter = new ProductMaxPriceFilter();
+
+        return new ComplexFilter<>(productList, productNameFilter,
+                productMaxPriceFilter, productMinPriceFilter, productCategoryFilter);
+    }
+
+    private void addPriceTextListeners() {
+        editMinPrice.addTextChangedListener(new PriceEditTextWatcher(editMinPrice, adapter, productMinPriceFilter));
+        editMaxPrice.addTextChangedListener(new PriceEditTextWatcher(editMaxPrice, adapter, productMaxPriceFilter));
+    }
+}

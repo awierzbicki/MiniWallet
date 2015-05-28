@@ -1,4 +1,4 @@
-package com.github.miniwallet;
+package com.github.miniwallet.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
+import com.github.miniwallet.R;
 import com.github.miniwallet.shopping.experimental.ViewHolder;
 import com.github.miniwallet.shopping.experimental.ViewHolderFactory;
 
@@ -48,6 +49,4 @@ public class EntityListAdapter<T> extends ArrayAdapter<T> {
         values = newValues;
         notifyDataSetChanged();
     }
-
-
 }
