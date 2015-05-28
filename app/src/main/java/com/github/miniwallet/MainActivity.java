@@ -11,6 +11,7 @@ import android.support.v4.view.ViewPager;
 import android.view.Window;
 
 import com.github.mikephil.charting.utils.Utils;
+import com.github.miniwallet.actions.purchase.PurchaseFragment;
 
 public class MainActivity extends FragmentActivity {
     private static final int PAGES_NUMBER = 4;
@@ -59,6 +60,10 @@ public class MainActivity extends FragmentActivity {
                     case MAIN_PAGE:
                         mainFragment.updateList();
                     case PURCHASE_PAGE:
+                        if (purchaseFragment != null) {
+                            purchaseFragment.validate();
+                        }
+
 
                 }
             }

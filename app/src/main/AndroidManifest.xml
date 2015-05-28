@@ -63,6 +63,11 @@
             android:name=".AddCategoryActivity"
             android:theme="@android:style/Theme.Holo.Dialog"
             android:excludeFromRecents="true"></activity>
+
+        <activity
+            android:name=".PurchaseMapActivity"
+            android:theme="@android:style/Theme.Holo.Dialog"
+            android:excludeFromRecents="true"></activity>
     </application>
 
 </manifest>

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.widget.Filter;
 import android.widget.Filterable;
 
-import com.github.miniwallet.EntityListAdapter;
+import com.github.miniwallet.adapters.EntityListAdapter;
 import com.github.miniwallet.shopping.Product;
 import com.github.miniwallet.shopping.experimental.ViewHolder;
 

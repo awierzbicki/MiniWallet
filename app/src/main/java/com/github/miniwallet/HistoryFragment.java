@@ -6,12 +6,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
 
+import com.github.miniwallet.adapters.EntityListAdapter;
 import com.github.miniwallet.db.daos.ProductDAO;
 import com.github.miniwallet.db.daos.PurchaseDAO;
 import com.github.miniwallet.db.daos.impl.ProductDAOImpl;
@@ -36,7 +36,7 @@ import butterknife.OnItemSelected;
 public class HistoryFragment extends Fragment {
 
     private enum SortingType {
-        PRICE("Lowest price", "price"), PRICE_DESC("Highest price", " price DESC"), DATE("Latest day", "date DESC"), DATE_DESC("Earliest day", "date");
+        PRICE("Lowest price", "price"), PRICE_DESC("Highest price", " price DESC"), DATE("Latest data", "date DESC"), DATE_DESC("Earliest data", "date");
 
         private final String name;
         private final String command;
@@ -55,12 +55,6 @@ public class HistoryFragment extends Fragment {
             return name;
         }
     }
-
-//    private static final String[] sorting = {"Lowest price", "Highest price", "Earliest date", "Latest date"};
-//    private static final int LOWEST_PRICE = 0;
-//    private static final int HIGHEST_PRICE = 1;
-//    private static final int EARLIEST_PRICE = 2;
-//    private static final int LATEST_PRICE = 3;
 
     private ProductDAO productDAO;
     private PurchaseDAO purchaseDAO;
@@ -100,36 +94,23 @@ public class HistoryFragment extends Fragment {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_history, container, false);
         ButterKnife.inject(this, rootView);
         listView.setAdapter(adapter);
-        listView.setOnItemLongClickListener(new EditItemListener());
         ArrayAdapter<SortingType> adapterState = new ArrayAdapter<SortingType>(getActivity(),
                 android.R.layout.simple_spinner_dropdown_item, SortingType.values());
         adapterState.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sortBySpinner.setAdapter(adapterState);
         loadPurchaseFromTimeAgo(1, Calendar.DAY_OF_MONTH);
+
         buttonToday.setPressed(true);
         return rootView;
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        System.out.println(requestCode + " " + resultCode);
-        //TO DO
-    }
-
-    private class EditItemListener implements AdapterView.OnItemLongClickListener {
-        @Override
-        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-            Purchase purchase = adapter.getItem(position);
-            Intent intent = new Intent(getActivity(), EditProductActivity.class);
-            //startActivityForResult(intent, EDIT);
-            return true;
-        }
-    }
-
     @OnItemClick(R.id.purchaseList)
-    public void onPurchaseClick(int positon) {
-
+    public void onPurchaseClick(int position) {
+        Purchase purchase = purchaseList.get(position);
+        Intent intent = new Intent(getActivity(), PurchaseMapActivity.class);
+        intent.putExtra("PurchaseLat", purchase.getLocation().latitude);
+        intent.putExtra("PurchaseLng", purchase.getLocation().longitude);
+        startActivity(intent);
     }
 
     @OnClick(R.id.buttonToday)
