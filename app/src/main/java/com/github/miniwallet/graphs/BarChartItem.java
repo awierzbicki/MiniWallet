@@ -13,7 +13,7 @@ import com.github.miniwallet.R;
 
 public class BarChartItem extends ChartItem {
 
-
+    public ViewHolder holder;
 
     public BarChartItem(ChartData<?> cd, Context c) {
         super(cd);
@@ -27,7 +27,7 @@ public class BarChartItem extends ChartItem {
     @Override
     public View getView(int position, View convertView, Context c) {
 
-        ViewHolder holder = null;
+        holder = null;
 
         if (convertView == null) {
 
@@ -66,7 +66,7 @@ public class BarChartItem extends ChartItem {
 
         // do not forget to refresh the chart
 //        holder.chart.invalidate();
-        holder.chart.animateY(700);
+        holder.chart.animateY(1700);
 
         return convertView;
     }

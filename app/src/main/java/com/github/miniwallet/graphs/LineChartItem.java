@@ -65,7 +65,7 @@ public class LineChartItem extends ChartItem {
 
         // do not forget to refresh the chart
         // holder.chart.invalidate();
-        holder.chart.animateX(750);
+        holder.chart.animateX(1750);
 
         return convertView;
     }

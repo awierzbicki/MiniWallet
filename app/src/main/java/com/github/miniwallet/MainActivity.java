@@ -73,7 +73,6 @@ public class MainActivity extends FragmentActivity {
         public ScreenSlidePagerAdapter(FragmentManager fm) {
             super(fm);
         }
-
         @Override
         public Fragment getItem(int position) {
             System.out.println("Page: " + position);

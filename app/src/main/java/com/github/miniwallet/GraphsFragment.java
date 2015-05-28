@@ -30,6 +30,7 @@ import com.github.miniwallet.graphs.ChartItem;
 import com.github.miniwallet.graphs.LineChartItem;
 import com.github.miniwallet.graphs.PieChartItem;
 import com.github.miniwallet.shopping.Product;
+import com.github.miniwallet.shopping.Purchase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +48,9 @@ public class GraphsFragment extends Fragment {
     private ArrayList<String> categories;
     private ArrayList<ChartItem> list;
 
+    private LineChartItem monthExpensesChart;
+    private BarChartItem productCountChart;
+    private PieChartItem categoryPercentageChart;
     @InjectView(R.id.graphsListView)
     ListView listView;
 
@@ -56,8 +60,6 @@ public class GraphsFragment extends Fragment {
         productDAO = new ProductDAOImpl();
         categoryDAO = new CategoryDAOImpl();
         purchaseDAO = new PurchaseDAOImpl();
-
-
     }
 
     @Override
@@ -72,10 +74,12 @@ public class GraphsFragment extends Fragment {
         adapterState.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         list = new ArrayList<ChartItem>();
-
-        list.add(new LineChartItem(generateDataLine(1), getActivity()));
-        list.add(new BarChartItem(generateDataBar(1), getActivity()));
-        list.add(new PieChartItem(generateDataPie(1), getActivity()));
+        monthExpensesChart = new LineChartItem(generateDataLine(1), getActivity());
+        productCountChart = new BarChartItem(generateDataBar(1), getActivity());
+        categoryPercentageChart = new PieChartItem(generateCategoriesDataPie(), getActivity());
+        list.add(monthExpensesChart);
+        list.add(productCountChart);
+        list.add(categoryPercentageChart);
 
 
         ChartDataAdapter cda = new ChartDataAdapter(getActivity(), list);
@@ -160,33 +164,25 @@ public class GraphsFragment extends Fragment {
         return cd;
     }
 
-    private PieData generateDataPie(int cnt) {
-
-        ArrayList<Entry> entries = new ArrayList<Entry>();
-
-        for (int i = 0; i < 4; i++) {
-            entries.add(new Entry((int) (Math.random() * 70) + 30, i));
+    private PieData generateCategoriesDataPie() {
+        ArrayList<Entry> entries = new ArrayList<>();
+        ArrayList<Purchase> purchases = (ArrayList)purchaseDAO.getAllPurchases();
+        ArrayList<String> categories = (ArrayList)categoryDAO.getAllCategoriesNames();
+        int i = 0;
+        for (String category : categories) {
+            float sum = 0;
+            for (Purchase pur : purchases) {
+                if (pur.getProduct().getCategory().getName().equals(category))
+                    sum += pur.getPrice();
+            }
+            entries.add(new Entry(sum, i++));
         }
+        PieDataSet data = new PieDataSet(entries, "");
+        data.setColors(ColorTemplate.VORDIPLOM_COLORS);
 
-        PieDataSet d = new PieDataSet(entries, "");
-
-        // space between slices
-        d.setSliceSpace(2f);
-        d.setColors(ColorTemplate.VORDIPLOM_COLORS);
-
-        PieData cd = new PieData(getQuarters(), d);
-        return cd;
-    }
-
-    private ArrayList<String> getQuarters() {
-
-        ArrayList<String> q = new ArrayList<String>();
-        q.add("1st Quarter");
-        q.add("2nd Quarter");
-        q.add("3rd Quarter");
-        q.add("4th Quarter");
-
-        return q;
+        PieData categoriesDataPie = new PieData(categories, data);
+        categoriesDataPie.setDrawValues(true);
+        return categoriesDataPie;
     }
 
     private ArrayList<String> getMonths() {
@@ -201,17 +197,11 @@ public class GraphsFragment extends Fragment {
         m.add("Jul");
         m.add("Aug");
         m.add("Sep");
-        m.add("Okt");
+        m.add("Oct");
         m.add("Nov");
         m.add("Dec");
 
         return m;
     }
 
-    public void animateGraphs() {
-        for (ChartItem graph : list) {
-
-        }
-
-    }
 }
