@@ -29,11 +29,17 @@ import com.github.miniwallet.graphs.BarChartItem;
 import com.github.miniwallet.graphs.ChartItem;
 import com.github.miniwallet.graphs.LineChartItem;
 import com.github.miniwallet.graphs.PieChartItem;
+import com.github.miniwallet.shopping.Category;
 import com.github.miniwallet.shopping.Product;
 import com.github.miniwallet.shopping.Purchase;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -74,13 +80,14 @@ public class GraphsFragment extends Fragment {
         adapterState.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         list = new ArrayList<ChartItem>();
-        monthExpensesChart = new LineChartItem(generateDataLine(1), getActivity());
+        monthExpensesChart = new LineChartItem(generateDataLine(), getActivity());
         productCountChart = new BarChartItem(generateDataBar(1), getActivity());
         categoryPercentageChart = new PieChartItem(generateCategoriesDataPie(), getActivity());
         list.add(monthExpensesChart);
         list.add(productCountChart);
         list.add(categoryPercentageChart);
 
+        //fabricatePurchases(10, 10);
 
         ChartDataAdapter cda = new ChartDataAdapter(getActivity(), list);
         listView.setAdapter(cda);
@@ -111,37 +118,24 @@ public class GraphsFragment extends Fragment {
         }
     }
 
-    private LineData generateDataLine(int cnt) {
+    private LineData generateDataLine() {
 
         ArrayList<Entry> e1 = new ArrayList<Entry>();
-
+        ArrayList<Date> monthDates = getMonthsDates();
         for (int i = 0; i < 12; i++) {
-            e1.add(new Entry((int) (Math.random() * 65) + 40, i));
+            e1.add(new Entry((float)(purchaseDAO.getExpensesBetween(monthDates.get(i), monthDates.get(i+1))), i));
         }
 
-        LineDataSet d1 = new LineDataSet(e1, "New DataSet " + cnt + ", (1)");
+        LineDataSet d1 = new LineDataSet(e1, "Expenses");
         d1.setLineWidth(2.5f);
         d1.setCircleSize(4.5f);
         d1.setHighLightColor(Color.rgb(244, 117, 117));
-        d1.setDrawValues(false);
-
-        ArrayList<Entry> e2 = new ArrayList<Entry>();
-
-        for (int i = 0; i < 12; i++) {
-            e2.add(new Entry(e1.get(i).getVal() - 30, i));
-        }
-
-        LineDataSet d2 = new LineDataSet(e2, "New DataSet " + cnt + ", (2)");
-        d2.setLineWidth(2.5f);
-        d2.setCircleSize(4.5f);
-        d2.setHighLightColor(Color.rgb(244, 117, 117));
-        d2.setColor(ColorTemplate.VORDIPLOM_COLORS[0]);
-        d2.setCircleColor(ColorTemplate.VORDIPLOM_COLORS[0]);
-        d2.setDrawValues(false);
+        d1.setDrawValues(true);
+        d1.setDrawCubic(true);
+        d1.setDrawFilled(true);
 
         ArrayList<LineDataSet> sets = new ArrayList<LineDataSet>();
         sets.add(d1);
-        sets.add(d2);
 
         LineData cd = new LineData(getMonths(), sets);
         return cd;
@@ -178,7 +172,19 @@ public class GraphsFragment extends Fragment {
             entries.add(new Entry(sum, i++));
         }
         PieDataSet data = new PieDataSet(entries, "");
-        data.setColors(ColorTemplate.VORDIPLOM_COLORS);
+
+        ArrayList<Integer> colors = new ArrayList<Integer>();
+        for (int c : ColorTemplate.VORDIPLOM_COLORS)
+            colors.add(c);
+        for (int c : ColorTemplate.JOYFUL_COLORS)
+            colors.add(c);
+        for (int c : ColorTemplate.COLORFUL_COLORS)
+            colors.add(c);
+        for (int c : ColorTemplate.LIBERTY_COLORS)
+            colors.add(c);
+        for (int c : ColorTemplate.PASTEL_COLORS)
+            colors.add(c);
+        data.setColors(colors);
 
         PieData categoriesDataPie = new PieData(categories, data);
         categoriesDataPie.setDrawValues(true);
@@ -202,6 +208,42 @@ public class GraphsFragment extends Fragment {
         m.add("Dec");
 
         return m;
+    }
+
+    private ArrayList<Date> getMonthsDates() {
+        ArrayList<Date> dates = new ArrayList<>();
+        Calendar cal = Calendar.getInstance();
+        for(int i = 0; i < 12; i++) {
+            cal.set(Calendar.MONTH, i);
+            cal.set(Calendar.DAY_OF_MONTH, 1);
+            dates.add(cal.getTime());
+        }
+        cal.set(Calendar.MONTH, 1);
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        cal.add(Calendar.YEAR, 1);
+        dates.add(cal.getTime());
+        return dates;
+    }
+
+    private void fabricatePurchases(int maxProductsPerMonth, int maxPricePerProduct) {
+        Purchase purchase;
+        Product product;
+        Category categories[] = {new Category("Pieczywo"), new Category("Napoje"), new Category("default"), new Category("Słodycze"), new Category("Prasa"), new Category("Fast Food")};
+        Random r = new Random();
+        Date today = new Date();
+        for(Date date : getMonthsDates()) {
+            if(today.getTime() > date.getTime()) {
+                for (int i = 0; i < r.nextInt(maxProductsPerMonth)+1; i++) {
+                    int cat = r.nextInt(categories.length);
+                    double price = (int)(maxPricePerProduct * r.nextDouble()) + 1;
+                    product = new Product(categories[cat], 0, UUID.randomUUID().toString().substring(0,5), 0);
+                    purchase = new Purchase(price , product , new LatLng(10.0, 11.0), date);
+                    purchaseDAO.insertPurchase(purchase);
+                    System.out.println("PURCHASE " + purchase.toString());
+                }
+            }
+        }
+
     }
 
 }

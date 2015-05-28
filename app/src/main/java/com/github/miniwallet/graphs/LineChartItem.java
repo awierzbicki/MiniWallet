@@ -47,7 +47,7 @@ public class LineChartItem extends ChartItem {
         // holder.chart.setValueTypeface(mTf);
         holder.chart.setDescription("");
         holder.chart.setDrawGridBackground(false);
-
+        holder.chart.setDescriptionTextSize(8f);
         XAxis xAxis = holder.chart.getXAxis();
         xAxis.setPosition(XAxisPosition.BOTTOM);
         xAxis.setDrawGridLines(false);
@@ -65,7 +65,7 @@ public class LineChartItem extends ChartItem {
 
         // do not forget to refresh the chart
         // holder.chart.invalidate();
-        holder.chart.animateX(1750);
+        holder.chart.animateXY(1500, 1500);
 
         return convertView;
     }

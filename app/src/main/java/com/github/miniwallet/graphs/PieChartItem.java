@@ -48,7 +48,6 @@ public class PieChartItem extends ChartItem {
         holder.chart.setHoleRadius(52f);
         holder.chart.setTransparentCircleRadius(57f);
         holder.chart.setCenterText("Categories");
-
         holder.chart.setCenterTextSize(18f);
         holder.chart.setUsePercentValues(true);
 
@@ -58,7 +57,6 @@ public class PieChartItem extends ChartItem {
         mChartData.setValueTextColor(Color.BLACK);
         // set data
         holder.chart.setData((PieData) mChartData);
-
         Legend l = holder.chart.getLegend();
         l.setPosition(LegendPosition.RIGHT_OF_CHART);
 

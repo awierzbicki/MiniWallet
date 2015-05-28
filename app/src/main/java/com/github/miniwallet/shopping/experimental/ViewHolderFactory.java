@@ -16,8 +16,6 @@ public final class ViewHolderFactory {
                 return new BestSellingViewHolder(view);
             case PURCHASE_ROW:
                 return new PurchaseViewHolder(view);
-            case HISTORY_ROW:
-                return new HistoryViewHolder(view);
         }
         return null;
     }
