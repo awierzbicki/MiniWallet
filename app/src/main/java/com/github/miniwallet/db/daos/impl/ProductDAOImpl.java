@@ -85,7 +85,7 @@ public class ProductDAOImpl implements ProductDAO {
     public Double getHighestPrice() {
         List<ProductTable> productsOrm = ProductTable.find(ProductTable.class, null, null, null,
                 "last_price DESC", String.valueOf(1));
-        return productsOrm.isEmpty() ? null : productsOrm.get(0).getLastPrice();
+        return productsOrm.isEmpty() ? 0 : productsOrm.get(0).getLastPrice();
     }
 
 
