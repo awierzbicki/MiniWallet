@@ -19,6 +19,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.miniwallet.adapters.EntityListAdapter;
 import com.github.miniwallet.db.daos.CategoryDAO;
 import com.github.miniwallet.db.daos.ProductDAO;
 import com.github.miniwallet.db.daos.PurchaseDAO;

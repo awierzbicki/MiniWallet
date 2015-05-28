@@ -15,6 +15,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.miniwallet.adapters.EntityListAdapter;
 import com.github.miniwallet.db.daos.CategoryDAO;
 import com.github.miniwallet.db.daos.ProductDAO;
 import com.github.miniwallet.db.daos.PurchaseDAO;

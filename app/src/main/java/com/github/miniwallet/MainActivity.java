@@ -11,8 +11,8 @@ import android.support.v4.view.ViewPager;
 import android.view.Window;
 
 import com.github.mikephil.charting.utils.Utils;
+import com.github.miniwallet.actions.purchase.PurchaseFragment;
 
-import com.github.miniwallet.shopping.purchase.PurchaseFragment;
 
 public class MainActivity extends FragmentActivity {
     private static final int PAGES_NUMBER = 3;
