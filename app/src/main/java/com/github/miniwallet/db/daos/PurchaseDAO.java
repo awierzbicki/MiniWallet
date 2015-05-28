@@ -14,4 +14,6 @@ public interface PurchaseDAO {
     public List<Purchase> getPurchasesByProduct(Product product);
     public double getExpensesFrom(Date start);
     public double getExpensesBetween(Date start, Date end);
+
+    public List<Purchase> getSortedPurchasesBetween(Date start, Date end, String orderBy);
 }

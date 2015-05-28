@@ -15,7 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Name"
-            android:id="@+id/newCategory"
+            android:id="@+id/productName"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:textSize="23dp" />
@@ -35,7 +35,7 @@
             android:text="Category"
             android:id="@+id/category"
             android:layout_alignParentBottom="false"
-            android:layout_below="@+id/newCategory"
+            android:layout_below="@+id/productName"
             android:textSize="15dp" />
     </RelativeLayout>
 

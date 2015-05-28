@@ -24,7 +24,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/newCategory"
+            android:id="@+id/category"
             android:textSize="20sp"
             android:text="@string/add_category_label"
             android:textAlignment="gravity"

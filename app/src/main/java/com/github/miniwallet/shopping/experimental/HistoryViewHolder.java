@@ -7,6 +7,8 @@ import com.github.miniwallet.R;
 import com.github.miniwallet.shopping.Product;
 import com.github.miniwallet.shopping.Purchase;
 
+import java.text.SimpleDateFormat;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
@@ -14,8 +16,8 @@ import butterknife.InjectView;
  * Created by Agnieszka on 2015-05-27.
  */
 public class HistoryViewHolder extends ViewHolder {
-    @InjectView(R.id.category)
-    TextView category;
+    static final SimpleDateFormat dataFormat = new SimpleDateFormat("EEE d MMMMMMM yyyy HH:mm");
+
     @InjectView(R.id.date)
     TextView date;
 
@@ -26,7 +28,7 @@ public class HistoryViewHolder extends ViewHolder {
     @Override
     public void setComponentsParameters(Object data) {
         Purchase purchase = (Purchase) data;
-        date.setText(purchase.getDate().toString());
+        date.setText(dataFormat.format(purchase.getDate()));
         price.setText(Double.toString(purchase.getPrice()));
         Product p = purchase.getProduct();
         category.setText(p.getCategory().getName());
