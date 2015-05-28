@@ -66,6 +66,19 @@ public class PurchaseDAOImpl implements PurchaseDAO {
     }
 
     @Override
+    public List<Purchase> getSortedPurchasesBetween(Date start, Date end, String orderBy) {
+        Log.d(TAG, "Getting all purchases from " + start + " to " + end + orderBy);
+
+        long startLong = start.getTime();
+        long endLong = end.getTime();
+
+        List<PurchaseTable> purchaseTable = PurchaseTable.find(PurchaseTable.class,
+                "date between ? and ?", new String[]{String.valueOf(startLong), String.valueOf(endLong)}, null, orderBy, null);
+
+        return ListUtils.convertList(purchaseTable);
+    }
+
+    @Override
     public Long insertPurchase(Purchase purchase) {
         Log.d(TAG, "Inserting purchase " + purchase.toString());
 
