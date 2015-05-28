@@ -1,5 +1,7 @@
 package com.github.miniwallet;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.github.miniwallet.db.daos.CategoryDAO;
 import com.github.miniwallet.db.daos.ProductDAO;
@@ -29,9 +32,10 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import butterknife.OnFocusChange;
 import butterknife.OnItemSelected;
 import butterknife.OnTextChanged;
+
+import static android.view.View.OnClickListener;
 
 /**
  * Created by Agnieszka on 2015-05-22.
@@ -39,6 +43,7 @@ import butterknife.OnTextChanged;
 public class PurchaseFragment extends Fragment {
     public static final int EDIT = 0;
     private static final int CATEGORY_ALL_POSITION = 0;
+
     private ProductDAO productDAO;
     private CategoryDAO categoryDAO;
     private PurchaseDAO purchaseDAO;
@@ -50,28 +55,31 @@ public class PurchaseFragment extends Fragment {
     private double minPrice = 0;
     private double maxPrice;
 
+    private AlertDialog alertDialog;
+
     @InjectView(R.id.search_edit_text)
     EditText searchText;
     @InjectView(R.id.purchaseList)
     ListView listView;
-    @InjectView(R.id.editMinPrice)
-    EditText editMinPrice;
-    @InjectView(R.id.editMaxPrice)
-    EditText editMaxPrice;
+    @InjectView(R.id.minPrice)
+    TextView editMinPrice;
+    @InjectView(R.id.maxPrice)
+    TextView editMaxPrice;
     @InjectView(R.id.spinnerCategory)
     Spinner categorySpinner;
+    EditText min;
+    EditText max;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //TO DO productDAO.getAllProducts();
         productDAO = new ProductDAOImpl();
         categoryDAO = new CategoryDAOImpl();
         purchaseDAO = new PurchaseDAOImpl();
         productList = productDAO.getAllProducts();
         categories = categoryDAO.getAllCategoriesNames();
         adapter = new ProductListFilterableAdapter(getActivity(), productList);
-        if(productDAO.getHighestPrice() != null)
+        if (productDAO.getHighestPrice() != null)
             maxPrice = productDAO.getHighestPrice();
         else
             maxPrice = 0.0d;
@@ -96,6 +104,10 @@ public class PurchaseFragment extends Fragment {
         adapterState.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categorySpinner.setAdapter(adapterState);
         listView.setTextFilterEnabled(true);
+        createMinMaxPriceDialog();
+        OnMinMaxClickedListener minMaxClickedListener = new OnMinMaxClickedListener();
+        editMaxPrice.setOnClickListener(minMaxClickedListener);
+        editMinPrice.setOnClickListener(minMaxClickedListener);
         //searchText.addTextChangedListener(new ProductNameTextWatcher());
         //categorySpinner.setOnItemSelectedListener(new CategorySelectedListener());
         return rootView;
@@ -115,6 +127,7 @@ public class PurchaseFragment extends Fragment {
         adapter.setNewValuesAndNotify(productList);
 
     }
+
 
     private class EditItemListener implements AdapterView.OnItemLongClickListener {
         @Override
@@ -143,6 +156,58 @@ public class PurchaseFragment extends Fragment {
         adapter.setNewValuesAndNotify(productList);
     }
 
+    private void createMinMaxPriceDialog() {
+        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(getActivity().LAYOUT_INFLATER_SERVICE);
+        final View layout = inflater.inflate(R.layout.edit_prices_range,
+                (ViewGroup) getActivity().findViewById(R.id.linearLayout));
+        min = (EditText) layout.findViewById(R.id.editMin);
+        max = (EditText) layout.findViewById(R.id.editMax);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setView(layout).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                try {
+                    minPrice = Double.parseDouble(min.getText().toString().replace(',', '.'));
+                    if (minPrice < 0) minPrice = 0;
+                } catch (NumberFormatException e) {
+                    minPrice = 0;
+                }
+                try {
+                    maxPrice = Double.parseDouble(max.getText().toString().replace(',', '.'));
+                    if (maxPrice < minPrice) maxPrice = minPrice + 100;
+                } catch (NumberFormatException e) {
+                    maxPrice = minPrice + 100;
+                }
+                editMaxPrice.setText(String.format("%.2f", maxPrice));
+                editMinPrice.setText(String.format("%.2f", minPrice));
+                productList = getMatchingProducts(categorySpinner.getSelectedItemPosition());
+                adapter.setNewValuesAndNotify(productList);
+                alertDialog.dismiss();
+            }
+        }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                alertDialog.dismiss();
+            }
+        });
+        alertDialog = builder.create();
+        alertDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                alertDialog.dismiss();
+            }
+        });
+    }
+
+    private class OnMinMaxClickedListener implements OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            min.setText(String.format("%.2f", minPrice));
+            max.setText(String.format("%.2f", maxPrice));
+            alertDialog.show();
+        }
+    }
 //
 //    private class ProductNameTextWatcher implements TextWatcher {
 //
@@ -180,65 +245,39 @@ public class PurchaseFragment extends Fragment {
 //    }
 
 
-    @OnFocusChange(R.id.editMinPrice)
-    void onMinPriceChanged(boolean focused) {
-        if (!focused) {
-            try {
-                minPrice = Double.parseDouble(editMinPrice.getText().toString());
-                if (minPrice < 0) minPrice = 0;
-                editMinPrice.setText(String.format("%.2f", minPrice));
-            } catch (NumberFormatException e) {
-                minPrice = 0;
-                editMinPrice.setText(String.format("%.2f", minPrice));
-            }
-        }
-        productList = getMatchingProducts(categorySpinner.getSelectedItemPosition());
-        adapter.setNewValuesAndNotify(productList);
-    }
-
-    @OnFocusChange(R.id.editMaxPrice)
-    void onMaxPriceChanged(boolean focused) {
-        if (!focused) {
-            try {
-                maxPrice = Double.parseDouble(editMaxPrice.getText().toString());
-                if (maxPrice < minPrice) maxPrice = minPrice + 100;
-                editMaxPrice.setText(String.format("%.2f", maxPrice));
-            } catch (NumberFormatException e) {
-                maxPrice = minPrice + 100;
-                editMaxPrice.setText(String.format("%.2f", maxPrice));
-            }
-        }
-        productList = getMatchingProducts(categorySpinner.getSelectedItemPosition());
-        adapter.setNewValuesAndNotify(productList);
-    }
-
-//    @OnTextChanged(R.id.editMinPrice)
-//    void onMinPriceChanged(CharSequence s) {
-//        try {
-//            minPrice = Double.parseDouble(editMinPrice.getText().toString());
-//            if (minPrice < 0) minPrice = 0;
-//            editMinPrice.setText(String.format("%.2f", minPrice));
-//        } catch (NumberFormatException e) {
-//            minPrice = 0;
-//            editMinPrice.setText(String.format("%.2f", minPrice));
+//    @OnFocusChange(R.id.editMinPrice)
+//    void onMinPriceChanged(boolean focused) {
+//        if (!focused) {
+//            try {
+//                minPrice = Double.parseDouble(editMinPrice.getText().toString());
+//                if (minPrice < 0) minPrice = 0;
+//                editMinPrice.setText(String.format("%.2f", minPrice));
+//                editMinPrice.on
+//            } catch (NumberFormatException e) {
+//                minPrice = 0;
+//                editMinPrice.setText(String.format("%.2f", minPrice));
+//            }
 //        }
-//        productList = productDAO.getProductsInPriceRange(minPrice, maxPrice);
+//        productList = getMatchingProducts(categorySpinner.getSelectedItemPosition());
 //        adapter.setNewValuesAndNotify(productList);
 //    }
 //
-//    @OnTextChanged(R.id.editMaxPrice)
-//    void onMaxPriceChanged(CharSequence s) {
-//        try {
-//            maxPrice = Double.parseDouble(editMaxPrice.getText().toString());
-//            if (maxPrice < minPrice) maxPrice = minPrice + 100;
-//            editMaxPrice.setText(String.format("%.2f", maxPrice));
-//        } catch (NumberFormatException e) {
-//            maxPrice = minPrice + 100;
-//            editMaxPrice.setText(String.format("%.2f", maxPrice));
+//    @OnFocusChange(R.id.editMaxPrice)
+//    void onMaxPriceChanged(boolean focused) {
+//        if (!focused) {
+//            try {
+//                maxPrice = Double.parseDouble(editMaxPrice.getText().toString());
+//                if (maxPrice < minPrice) maxPrice = minPrice + 100;
+//                editMaxPrice.setText(String.format("%.2f", maxPrice));
+//            } catch (NumberFormatException e) {
+//                maxPrice = minPrice + 100;
+//                editMaxPrice.setText(String.format("%.2f", maxPrice));
+//            }
 //        }
-//        productList = productDAO.getProductsInPriceRange(minPrice, maxPrice);
+//        productList = getMatchingProducts(categorySpinner.getSelectedItemPosition());
 //        adapter.setNewValuesAndNotify(productList);
 //    }
+
 
     private List<Product> getMatchingProducts(int categoryPosition) {
         if (categoryPosition == CATEGORY_ALL_POSITION) {
