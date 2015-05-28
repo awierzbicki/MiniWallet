@@ -8,6 +8,8 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 
+import com.github.miniwallet.shopping.purchase.PurchaseFragment;
+
 public class MainActivity extends FragmentActivity {
     private static final int PAGES_NUMBER = 2;
     //@InjectView(R.id.pager)
