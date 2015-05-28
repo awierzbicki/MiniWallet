@@ -17,7 +17,7 @@ public class AddCategoryActivity extends Activity {
     public static final int CANCEL = 1;
     public static final String CATEGORY = "CATEGORY";
 
-    @InjectView(R.id.newCategory)
+    @InjectView(R.id.category)
     TextView productName;
     @InjectView(R.id.addCategoryEditText)
     EditText category;
@@ -35,6 +35,7 @@ public class AddCategoryActivity extends Activity {
         ButterKnife.inject(this);
 
     }
+
     @OnClick(R.id.addCategoryOK)
     public void onClickOK() {
         Intent returnIntent = new Intent();
