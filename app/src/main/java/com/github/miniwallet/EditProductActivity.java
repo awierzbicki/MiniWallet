@@ -26,7 +26,7 @@ import butterknife.InjectView;
  * Created by Agnieszka on 2015-05-22.
  */
 public class EditProductActivity extends Activity {
-    @InjectView(R.id.category)
+    @InjectView(R.id.newCategory)
     TextView productName;
     @InjectView(R.id.editProductPrice)
     EditText productPrice;

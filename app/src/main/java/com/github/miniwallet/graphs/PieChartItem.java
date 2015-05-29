@@ -15,6 +15,7 @@ import com.github.miniwallet.R;
 
 public class PieChartItem extends ChartItem {
 
+
     public PieChartItem(ChartData<?> cd, Context c) {
         super(cd);
     }
@@ -47,28 +48,29 @@ public class PieChartItem extends ChartItem {
         holder.chart.setDescription("");
         holder.chart.setHoleRadius(52f);
         holder.chart.setTransparentCircleRadius(57f);
-        holder.chart.setCenterText("Categories");
+        holder.chart.setCenterText("MPChart\nAndroid");
+
         holder.chart.setCenterTextSize(18f);
         holder.chart.setUsePercentValues(true);
 
         mChartData.setValueFormatter(new PercentFormatter());
 
-        mChartData.setValueTextSize(15f);
-        mChartData.setValueTextColor(Color.BLACK);
+        mChartData.setValueTextSize(11f);
+        mChartData.setValueTextColor(Color.WHITE);
         // set data
         holder.chart.setData((PieData) mChartData);
+
         Legend l = holder.chart.getLegend();
         l.setPosition(LegendPosition.RIGHT_OF_CHART);
 
         // do not forget to refresh the chart
         // holder.chart.invalidate();
-        holder.chart.animateXY(1500, 1500);
+        holder.chart.animateXY(900, 900);
 
         return convertView;
     }
 
-    public static class ViewHolder {
-        public PieChart chart;
-
+    private static class ViewHolder {
+        PieChart chart;
     }
 }

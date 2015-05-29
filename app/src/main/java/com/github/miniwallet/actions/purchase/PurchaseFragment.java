@@ -53,7 +53,6 @@ public class PurchaseFragment extends Fragment implements AdapterView.OnItemClic
     private FilterableEntityListAdapter<Product> adapter;
     private List<Product> productList;
     private ArrayList<String> categories;
-    private ArrayAdapter<String> categoriesAdapter;
 
     @InjectView(R.id.search_edit_text)
     EditText searchText;
@@ -95,10 +94,11 @@ public class PurchaseFragment extends Fragment implements AdapterView.OnItemClic
         listView.setOnItemLongClickListener(new EditItemListener());
         listView.setOnItemClickListener(this);
 
-        categoriesAdapter = new ArrayAdapter<String>(getActivity(),
+        categories.add(CATEGORY_ALL_POSITION, "All");
+        ArrayAdapter<String> adapterState = new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_spinner_dropdown_item, categories);
-        categoriesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        categorySpinner.setAdapter(categoriesAdapter);
+        adapterState.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        categorySpinner.setAdapter(adapterState);
         listView.setTextFilterEnabled(true);
 
         addPriceTextListeners();
@@ -109,6 +109,7 @@ public class PurchaseFragment extends Fragment implements AdapterView.OnItemClic
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        System.out.println(requestCode + " " + resultCode);
 
         productCategoryFilter.setCategories(categoryDAO.getCategoryByName(categories.get(categorySpinner.getSelectedItemPosition())));
         productList = productDAO.getAllProducts();
@@ -159,13 +160,5 @@ public class PurchaseFragment extends Fragment implements AdapterView.OnItemClic
     private void addPriceTextListeners() {
         editMinPrice.addTextChangedListener(new PriceEditTextWatcher(editMinPrice, adapter, productMinPriceFilter));
         editMaxPrice.addTextChangedListener(new PriceEditTextWatcher(editMaxPrice, adapter, productMaxPriceFilter));
-    }
-
-    public void validate() {
-        productList = productDAO.getAllProducts();
-        categories = categoryDAO.getAllCategoriesNames();
-        categories.add(CATEGORY_ALL_POSITION, "All");
-        categoriesAdapter.notifyDataSetChanged();
-        adapter.setNewValuesAndNotify(productList);
     }
 }

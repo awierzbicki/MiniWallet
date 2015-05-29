@@ -13,6 +13,7 @@ import android.view.Window;
 import com.github.mikephil.charting.utils.Utils;
 import com.github.miniwallet.actions.purchase.PurchaseFragment;
 
+
 public class MainActivity extends FragmentActivity {
     private static final int PAGES_NUMBER = 3;
     //@InjectView(R.id.pager)
@@ -58,10 +59,6 @@ public class MainActivity extends FragmentActivity {
                     case MAIN_PAGE:
                         mainFragment.updateList();
                     case PURCHASE_PAGE:
-                        if (purchaseFragment != null) {
-                            purchaseFragment.validate();
-                        }
-
 
                 }
             }
@@ -78,6 +75,7 @@ public class MainActivity extends FragmentActivity {
         public ScreenSlidePagerAdapter(FragmentManager fm) {
             super(fm);
         }
+
         @Override
         public Fragment getItem(int position) {
             System.out.println("Page: " + position);

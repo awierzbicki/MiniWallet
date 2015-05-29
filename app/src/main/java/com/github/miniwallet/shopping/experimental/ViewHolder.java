@@ -16,7 +16,7 @@ public abstract class ViewHolder {
     TextView price;
 
     public enum Type {
-        BEST_SELLING_ROW(R.layout.best_selling_row), PURCHASE_ROW(R.layout.purchase_row);
+        BEST_SELLING_ROW(R.layout.best_selling_row), PURCHASE_ROW(R.layout.purchase_row), HISTORY_ROW(R.layout.history_row);
         private final int layoutId;
 
         private Type(int layoutId) {

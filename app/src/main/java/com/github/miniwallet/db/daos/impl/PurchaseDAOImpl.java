@@ -8,7 +8,6 @@ import com.github.miniwallet.db.daos.impl.entities.ProductTable;
 import com.github.miniwallet.db.daos.impl.entities.PurchaseTable;
 import com.github.miniwallet.shopping.Product;
 import com.github.miniwallet.shopping.Purchase;
-import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Date;
 import java.util.List;
@@ -64,26 +63,6 @@ public class PurchaseDAOImpl implements PurchaseDAO {
         }
         Log.d(TAG, "Returning " + total);
         return total;
-    }
-
-    @Override
-    public List<Purchase> getSortedPurchasesBetween(Date start, Date end, String orderBy) {
-        Log.d(TAG, "Getting all purchases from " + start + " to " + end + orderBy);
-
-        long startLong = start.getTime();
-        long endLong = end.getTime();
-
-        List<PurchaseTable> purchaseTable = PurchaseTable.find(PurchaseTable.class,
-                "date between ? and ?", new String[]{String.valueOf(startLong), String.valueOf(endLong)}, null, orderBy, null);
-
-        return ListUtils.convertList(purchaseTable);
-    }
-
-    @Override
-    public LatLng getPurchaseLatLang(long purchaseId) {
-        List<PurchaseTable> purchaseTable = PurchaseTable.find(PurchaseTable.class,
-                "id = ?", String.valueOf(purchaseId));
-        return purchaseTable.isEmpty() ? null : purchaseTable.get(0).getLocation();
     }
 
     @Override
