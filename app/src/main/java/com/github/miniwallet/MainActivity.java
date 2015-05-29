@@ -13,20 +13,21 @@ import android.view.Window;
 import com.github.mikephil.charting.utils.Utils;
 import com.github.miniwallet.actions.purchase.PurchaseFragment;
 
-
 public class MainActivity extends FragmentActivity {
-    private static final int PAGES_NUMBER = 3;
+    private static final int PAGES_NUMBER = 4;
     //@InjectView(R.id.pager)
     ViewPager mPager;
     private PagerAdapter mPagerAdapter;
     private static final int GRAPH_PAGE = 0;
     private static final int MAIN_PAGE = 1;
     private static final int PURCHASE_PAGE = 2;
+    private static final int HISTORY_PAGE = 3;
     private int actualPage = MAIN_PAGE;
 
     private MainFragment mainFragment;
     private PurchaseFragment purchaseFragment;
     private GraphsFragment graphsFragment;
+    private HistoryFragment historyFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +60,9 @@ public class MainActivity extends FragmentActivity {
                     case MAIN_PAGE:
                         mainFragment.updateList();
                     case PURCHASE_PAGE:
-
+                        if (purchaseFragment != null) {
+                            purchaseFragment.validate();
+                        }
                 }
             }
 
@@ -75,7 +78,6 @@ public class MainActivity extends FragmentActivity {
         public ScreenSlidePagerAdapter(FragmentManager fm) {
             super(fm);
         }
-
         @Override
         public Fragment getItem(int position) {
             System.out.println("Page: " + position);
@@ -89,6 +91,9 @@ public class MainActivity extends FragmentActivity {
                 case GRAPH_PAGE:
                     graphsFragment = new GraphsFragment();
                     return graphsFragment;
+                case HISTORY_PAGE:
+                    historyFragment = new HistoryFragment();
+                    return historyFragment;
             }
             return new PurchaseFragment();
         }
