@@ -21,7 +21,6 @@ import com.github.miniwallet.shopping.experimental.ViewHolder;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -98,9 +97,7 @@ public class HistoryFragment extends Fragment {
                 android.R.layout.simple_spinner_dropdown_item, SortingType.values());
         adapterState.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sortBySpinner.setAdapter(adapterState);
-        loadPurchaseFromTimeAgo(1, Calendar.DAY_OF_MONTH);
-
-        buttonToday.setPressed(true);
+        onTodayClick();
         return rootView;
     }
 
@@ -116,38 +113,37 @@ public class HistoryFragment extends Fragment {
     @OnClick(R.id.buttonToday)
     public void onTodayClick() {
         loadPurchaseFromTimeAgo(1, Calendar.DAY_OF_MONTH);
-        setButtonsUnpressed();
-        buttonToday.setPressed(true);
+        setButtonsAlpha((float) 0.3);
+        buttonToday.setAlpha(1);
     }
 
     @OnClick(R.id.buttonWeek)
     public void onWeekClick() {
         loadPurchaseFromTimeAgo(7, Calendar.DAY_OF_MONTH);
-        setButtonsUnpressed();
-        buttonWeek.setPressed(true);
+        setButtonsAlpha((float) 0.3);
+        buttonWeek.setAlpha(1);
     }
 
     @OnClick(R.id.buttonMonth)
     public void onMonthClick() {
         loadPurchaseFromTimeAgo(1, Calendar.MONTH);
-        setButtonsUnpressed();
-        buttonMonth.setPressed(true);
+        setButtonsAlpha((float) 0.3);
+        buttonMonth.setAlpha(1);
     }
 
     @OnClick(R.id.buttonYear)
     public void onYearClick() {
         loadPurchaseFromTimeAgo(1, Calendar.YEAR);
-        setButtonsUnpressed();
-        buttonYear.setPressed(true);
+        setButtonsAlpha((float) 0.3);
+        buttonYear.setAlpha(1);
     }
 
 
     private void loadPurchaseFromTimeAgo(int value, int calendarField) {
         Calendar cal = Calendar.getInstance();
-        Calendar c = new GregorianCalendar(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
-        endDate = c.getTime();
-        c.roll(calendarField, (-1) * value);
-        startDate = c.getTime();
+        endDate = cal.getTime();
+        cal.roll(calendarField, (-1) * value);
+        startDate = cal.getTime();
         validate();
     }
 
@@ -162,10 +158,10 @@ public class HistoryFragment extends Fragment {
         adapter.setNewValuesAndNotify(purchaseList);
     }
 
-    private void setButtonsUnpressed() {
-        buttonToday.setPressed(false);
-        buttonMonth.setPressed(false);
-        buttonWeek.setPressed(false);
-        buttonYear.setPressed(false);
+    private void setButtonsAlpha(float alpha) {
+        buttonToday.setAlpha(alpha);
+        buttonMonth.setAlpha(alpha);
+        buttonWeek.setAlpha(alpha);
+        buttonYear.setAlpha(alpha);
     }
 }
