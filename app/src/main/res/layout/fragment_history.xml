@@ -63,7 +63,7 @@
         android:layout_weight="0.005"
         android:background="#0B9563" />
 
-    <ListView
+    <com.github.miniwallet.PagingListView
         android:id="@+id/purchaseList"
         android:layout_width="match_parent"
         android:layout_height="0px"

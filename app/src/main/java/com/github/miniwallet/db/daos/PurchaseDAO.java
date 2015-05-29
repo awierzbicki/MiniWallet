@@ -22,7 +22,7 @@ public interface PurchaseDAO {
 
     public double getExpensesBetween(Date start, Date end);
 
-    public List<Purchase> getSortedPurchasesBetween(Date start, Date end, String orderBy);
+    public List<Purchase> getSortedPurchasesBetween(Date start, Date end, String orderBy, int limit, int skip);
 
     public LatLng getPurchaseLatLang(long puchaseId);
 

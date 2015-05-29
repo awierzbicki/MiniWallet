@@ -67,14 +67,19 @@ public class PurchaseDAOImpl implements PurchaseDAO {
     }
 
     @Override
-    public List<Purchase> getSortedPurchasesBetween(Date start, Date end, String orderBy) {
+    public List<Purchase> getSortedPurchasesBetween(Date start, Date end, String orderBy, int limit, int skip) {
         Log.d(TAG, "Getting all purchases from " + start + " to " + end + orderBy);
 
         long startLong = start.getTime();
         long endLong = end.getTime();
 
-        List<PurchaseTable> purchaseTable = PurchaseTable.find(PurchaseTable.class,
-                "date between ? and ?", new String[]{String.valueOf(startLong), String.valueOf(endLong)}, null, orderBy, null);
+//        List<PriceTable> purchases = PriceTable.findWithQuery(PriceTable.class,"SELECT * FROM PriceTable WHERE data between ? and ? ORDER BY ? LIMIT ? OFFSET ?",
+//                String.valueOf(startLong), String.valueOf(endLong), orderBy, String.valueOf(limit), String.valueOf(skip));
+
+        List<PurchaseTable> purchaseTable = PurchaseTable.findWithQuery(PurchaseTable.class, "SELECT * FROM purchase_table WHERE date between ? and ? ORDER BY ? LIMIT ? OFFSET ?",
+                String.valueOf(startLong), String.valueOf(endLong), orderBy, String.valueOf(limit), String.valueOf(skip));
+//        List<PurchaseTable> purchaseTable = PurchaseTable.find(PurchaseTable.class,
+//                "date between ? and ?", new String[]{String.valueOf(startLong), String.valueOf(endLong)}, null, orderBy, null);
 
         return ListUtils.convertList(purchaseTable);
     }
