@@ -25,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/newCategory"
-            android:textSize="45sp"
+            android:textSize="35sp"
             android:text="text"
             android:textAlignment="gravity"
             android:gravity="center" />
@@ -62,11 +62,11 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.15"
+        android:layout_weight="0.10"
         android:orientation="horizontal"
         android:weightSum="1"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp">
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp">
 
         <TextView
             android:layout_width="0px"
@@ -75,7 +75,7 @@
             android:text="Category:"
             android:id="@+id/productCategory"
             android:textSize="20sp"
-            android:gravity="center|bottom|left" />
+            android:gravity="center|left" />
 
         <Spinner
             android:layout_width="0px"
@@ -110,5 +110,13 @@
             android:text="@string/ok" />
 
     </LinearLayout>
+
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/productChart"
+        android:layout_width="fill_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_weight="0.25" />
 
 </LinearLayout>

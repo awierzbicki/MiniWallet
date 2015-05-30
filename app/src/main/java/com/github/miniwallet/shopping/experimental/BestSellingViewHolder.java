@@ -20,7 +20,7 @@ public class BestSellingViewHolder extends ViewHolder {
     public void setComponentsParameters(Object data) {
         Product p = (Product) data;
         name.setText(p.getName());
-        price.setText(Double.toString(p.getLastPrice()));
+        price.setText(String.format("%.2f", p.getLastPrice()));
         category.setText(p.getCategory().getName());
     }
 

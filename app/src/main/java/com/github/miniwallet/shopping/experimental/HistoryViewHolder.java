@@ -29,7 +29,7 @@ public class HistoryViewHolder extends ViewHolder {
     public void setComponentsParameters(Object data) {
         Purchase purchase = (Purchase) data;
         date.setText(dataFormat.format(purchase.getDate()));
-        price.setText(Double.toString(purchase.getPrice()));
+        price.setText(String.format("%.2f", purchase.getPrice()));
         Product p = purchase.getProduct();
         category.setText(p.getCategory().getName());
         name.setText(p.getName());

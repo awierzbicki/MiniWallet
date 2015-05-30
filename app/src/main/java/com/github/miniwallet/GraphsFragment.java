@@ -30,10 +30,8 @@ import com.github.miniwallet.graphs.BarChartItem;
 import com.github.miniwallet.graphs.ChartItem;
 import com.github.miniwallet.graphs.LineChartItem;
 import com.github.miniwallet.graphs.PieChartItem;
-import com.github.miniwallet.shopping.Category;
 import com.github.miniwallet.shopping.Product;
 import com.github.miniwallet.shopping.Purchase;
-import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -41,8 +39,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
-import java.util.UUID;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -97,9 +93,15 @@ public class GraphsFragment extends Fragment {
         list.add(productCountChart);
         list.add(categoryPercentageChart);
 
-        //fabricatePurchases(10, 10);
+        /*
+        ArrayList<Purchase> fakePurchases = PurchasesGenerator.fabricatePurchases(40);
+        for (Purchase p : fakePurchases) {
+            purchaseDAO.insertPurchase(p);
+        }
+        */
 
         ChartDataAdapter cda = new ChartDataAdapter(getActivity(), list);
+
         listView.setAdapter(cda);
 
         return rootView;
@@ -210,15 +212,29 @@ public class GraphsFragment extends Fragment {
         ArrayList<Entry> entries = new ArrayList<>();
         ArrayList<Purchase> purchases = (ArrayList)purchaseDAO.getAllPurchases();
         ArrayList<String> categories = (ArrayList)categoryDAO.getAllCategoriesNames();
+        ArrayList<String> categoriesToRemove = new ArrayList<>();
         int i = 0;
+        float other = 0;
+        double fivePercent = purchaseDAO.getExpensesFrom(new Date(0)) / 20.0;
         for (String category : categories) {
             float sum = 0;
             for (Purchase pur : purchases) {
                 if (pur.getProduct().getCategory().getName().equals(category))
                     sum += pur.getPrice();
             }
-            entries.add(new Entry(sum, i++));
+            if(sum > fivePercent) {
+                entries.add(new Entry(sum, i++));
+            }
+            else {
+                categoriesToRemove.add(category);
+                other += sum;
+            }
         }
+
+        categories.removeAll(categoriesToRemove);
+        categories.add("Others");
+        entries.add(new Entry(other, i));
+
         PieDataSet data = new PieDataSet(entries, "");
 
         ArrayList<Integer> colors = new ArrayList<Integer>();
@@ -271,27 +287,6 @@ public class GraphsFragment extends Fragment {
         cal.add(Calendar.YEAR, 1);
         dates.add(cal.getTime());
         return dates;
-    }
-
-    private void fabricatePurchases(int maxProductsPerMonth, int maxPricePerProduct) {
-        Purchase purchase;
-        Product product;
-        Category categories[] = {new Category("Pieczywo"), new Category("Napoje"), new Category("default"), new Category("Słodycze"), new Category("Prasa"), new Category("Fast Food")};
-        Random r = new Random();
-        Date today = new Date();
-        for(Date date : getMonthsDates()) {
-            if(today.getTime() > date.getTime()) {
-                for (int i = 0; i < r.nextInt(maxProductsPerMonth)+1; i++) {
-                    int cat = r.nextInt(categories.length);
-                    double price = (int)(maxPricePerProduct * r.nextDouble()) + 1;
-                    product = new Product(categories[cat], 0, UUID.randomUUID().toString().substring(0,5), 0);
-                    purchase = new Purchase(price , product , new LatLng(10.0, 11.0), date);
-                    purchaseDAO.insertPurchase(purchase);
-                    System.out.println("PURCHASE " + purchase.toString());
-                }
-            }
-        }
-
     }
 
 }

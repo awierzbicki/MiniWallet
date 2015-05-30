@@ -13,8 +13,8 @@ import android.widget.ListView;
 import android.widget.Spinner;
 
 import com.github.miniwallet.EditProductActivity;
-import com.github.miniwallet.adapters.FilterableEntityListAdapter;
 import com.github.miniwallet.R;
+import com.github.miniwallet.adapters.FilterableEntityListAdapter;
 import com.github.miniwallet.db.daos.CategoryDAO;
 import com.github.miniwallet.db.daos.ProductDAO;
 import com.github.miniwallet.db.daos.PurchaseDAO;

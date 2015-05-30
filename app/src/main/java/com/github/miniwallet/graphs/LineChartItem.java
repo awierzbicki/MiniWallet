@@ -59,6 +59,7 @@ public class LineChartItem extends ChartItem {
 
         YAxis leftAxis = holder.chart.getAxisLeft();
         leftAxis.setLabelCount(8);
+        leftAxis.setXOffset(15f);
 
         YAxis rightAxis = holder.chart.getAxisRight();
         rightAxis.setEnabled(false);

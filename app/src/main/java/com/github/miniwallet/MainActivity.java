@@ -54,7 +54,7 @@ public class MainActivity extends FragmentActivity {
         pager.setOnPageChangeListener(getListener());
 
         tabsStrip.setViewPager(pager);
-        tabsStrip.setTabPaddingLeftRight(25);
+        tabsStrip.setTabPaddingLeftRight(5);
     }
 
 
@@ -78,7 +78,10 @@ public class MainActivity extends FragmentActivity {
                 switch (position) {
                     case GRAPH_PAGE:
                     case MAIN_PAGE:
-                        mainFragment.updateList();
+                        if (purchaseFragment != null) {
+                            mainFragment.updateList();
+                            mainFragment.setActualTotal();
+                        }
                     case PURCHASE_PAGE:
                         if (purchaseFragment != null) {
                             purchaseFragment.validate();
