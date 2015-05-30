@@ -40,6 +40,10 @@ public class EntityListAdapter<T> extends ArrayAdapter<T> {
         return convertView;
     }
 
+    public void addAll(List<T> list) {
+        values.addAll(list);
+    }
+
     @Override
     public int getCount() {
         return values != null ? values.size() : 0;
