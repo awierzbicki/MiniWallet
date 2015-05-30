@@ -7,10 +7,10 @@ import com.orm.SugarRecord;
 import java.util.Date;
 
 public class PurchaseTable extends SugarRecord<PurchaseTable> implements AbstractTable<Purchase> {
-    long price;
-    long product;
+    double price;
     double lat;
     double lng;
+    long product;
     long date;
 
     public PurchaseTable() {
@@ -18,10 +18,9 @@ public class PurchaseTable extends SugarRecord<PurchaseTable> implements Abstrac
 
     public PurchaseTable(Purchase purchase) {
         ProductTable productTable = extractProductTable(purchase);
-        PriceTable priceTable = extractPriceTable(purchase, productTable);
 
         this.product = productTable.getId();
-        this.price = priceTable.getId();
+        this.price = purchase.getPrice();
         this.date = purchase.getDate().getTime();
         this.lat = purchase.getLocation().latitude;
         this.lng = purchase.getLocation().longitude;
@@ -38,21 +37,15 @@ public class PurchaseTable extends SugarRecord<PurchaseTable> implements Abstrac
         return productTable;
     }
 
-    private PriceTable extractPriceTable(Purchase purchase, ProductTable productTable) {
-        PriceTable priceTable = new PriceTable(productTable, purchase.getPrice(), purchase.getDate().getTime());
-        priceTable.save();
-
-        return priceTable;
-    }
 
     public Purchase convert() {
-        return new Purchase(getId(), getPrice().getPrice(), getProduct().convert(), new LatLng(lat, lng),
+        return new Purchase(getId(), getPrice(), getProduct().convert(), new LatLng(lat, lng),
                 new Date(date));
     }
 
 
-    public PriceTable getPrice() {
-        return PriceTable.findById(PriceTable.class, price);
+    public double getPrice() {
+        return price;
     }
 
     public ProductTable getProduct() {
