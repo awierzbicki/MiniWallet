@@ -108,8 +108,8 @@ public class HistoryFragment extends Fragment implements PagingListView.PagingLi
     public void onPurchaseClick(int position) {
         Purchase purchase = purchaseList.get(position);
         Intent intent = new Intent(getActivity(), PurchaseMapActivity.class);
-        intent.putExtra("PurchaseLat", purchase.getLocation().latitude);
-        intent.putExtra("PurchaseLng", purchase.getLocation().longitude);
+        intent.putExtra("PurchaseLat", purchase.getPosition().latitude);
+        intent.putExtra("PurchaseLng", purchase.getPosition().longitude);
         startActivity(intent);
     }
 

@@ -22,8 +22,8 @@ public class PurchaseTable extends SugarRecord<PurchaseTable> implements Abstrac
         this.product = productTable.getId();
         this.price = purchase.getPrice();
         this.date = purchase.getDate().getTime();
-        this.lat = purchase.getLocation().latitude;
-        this.lng = purchase.getLocation().longitude;
+        this.lat = purchase.getPosition().latitude;
+        this.lng = purchase.getPosition().longitude;
     }
 
     private ProductTable extractProductTable(Purchase purchase) {
