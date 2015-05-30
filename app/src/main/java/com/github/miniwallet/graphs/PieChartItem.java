@@ -6,8 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.Legend.LegendPosition;
 import com.github.mikephil.charting.data.ChartData;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.utils.PercentFormatter;
@@ -45,27 +43,28 @@ public class PieChartItem extends ChartItem {
         }
 
         // apply styling
-        holder.chart.setDescription("");
-        holder.chart.setHoleRadius(52f);
-        holder.chart.setTransparentCircleRadius(57f);
-        holder.chart.setCenterText("MPChart\nAndroid");
+        holder.chart.setHoleRadius(40f);
+        holder.chart.setTransparentCircleRadius(50f);
+        holder.chart.setCenterText("Expenses\nby categories");
 
         holder.chart.setCenterTextSize(18f);
         holder.chart.setUsePercentValues(true);
 
         mChartData.setValueFormatter(new PercentFormatter());
 
-        mChartData.setValueTextSize(11f);
-        mChartData.setValueTextColor(Color.WHITE);
+        mChartData.setValueTextSize(15f);
+        mChartData.setValueTextColor(Color.BLACK);
         // set data
         holder.chart.setData((PieData) mChartData);
 
-        Legend l = holder.chart.getLegend();
-        l.setPosition(LegendPosition.RIGHT_OF_CHART);
+        holder.chart.setDescription("");
+        holder.chart.getLegend().setEnabled(false);
+        //Legend l = holder.chart.getLegend();
+        //l.setPosition(LegendPosition.RIGHT_OF_CHART);
 
         // do not forget to refresh the chart
         // holder.chart.invalidate();
-        holder.chart.animateXY(900, 900);
+        holder.chart.animateXY(1500, 1500);
 
         return convertView;
     }

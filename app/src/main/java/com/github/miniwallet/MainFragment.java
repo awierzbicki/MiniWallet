@@ -140,14 +140,16 @@ public class MainFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == ADD && resultCode == AddCategoryActivity.OK) {
-            String result = data.getStringExtra(AddCategoryActivity.CATEGORY);
-            Category category = new Category(result);
-            categoryDAO.insertCategory(category);
-            categories.remove(categories.size() - 1);
-            categories.add(result);
-            categories.add(NEW_CATEGORY);
-            adapterState.notifyDataSetChanged();
-            Toast.makeText(getActivity(), "DODANO: " + result, Toast.LENGTH_SHORT).show();
+            if(data != null) {
+                String result = data.getStringExtra(AddCategoryActivity.CATEGORY);
+                Category category = new Category(result);
+                categoryDAO.insertCategory(category);
+                categories.remove(categories.size() - 1);
+                categories.add(result);
+                categories.add(NEW_CATEGORY);
+                adapterState.notifyDataSetChanged();
+                Toast.makeText(getActivity(), "DODANO: " + result, Toast.LENGTH_SHORT).show();
+            }
         }
         if (requestCode == ADD && resultCode == AddCategoryActivity.CANCEL) {
             spinner.setSelection(0);

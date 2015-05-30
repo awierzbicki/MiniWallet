@@ -54,6 +54,7 @@ public class MainActivity extends FragmentActivity {
         pager.setOnPageChangeListener(getListener());
 
         tabsStrip.setViewPager(pager);
+        tabsStrip.setTabPaddingLeftRight(25);
     }
 
 
@@ -128,13 +129,13 @@ public class MainActivity extends FragmentActivity {
                 case MAIN_PAGE:
                     return "Start page";
                 case PURCHASE_PAGE:
-                    return "Product list";
+                    return "Products";
                 case GRAPH_PAGE:
                     return "Graphs";
                 case HISTORY_PAGE:
-                    return "Purchase history";
+                    return "History";
                 case MAP_PAGE:
-                    return "Purchase locations";
+                    return "Locations";
             }
             return "";
         }

@@ -37,6 +37,8 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -58,6 +60,15 @@ public class GraphsFragment extends Fragment {
     private LineChartItem monthExpensesChart;
     private BarChartItem productCountChart;
     private PieChartItem categoryPercentageChart;
+
+    static final Comparator<Product> COUNT_ORDER =
+            new Comparator<Product>() {
+                @Override
+                public int compare(Product lhs, Product rhs) {
+                    return Integer.compare(lhs.getTotalPurchases(), rhs.getTotalPurchases());
+                }
+            };
+
     @InjectView(R.id.graphsListView)
     ListView listView;
 
@@ -76,14 +87,12 @@ public class GraphsFragment extends Fragment {
         ButterKnife.inject(this, rootView);
         listView.setAdapter(adapter);
 
-        ArrayAdapter<String> adapterState = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_spinner_dropdown_item, categories);
-        adapterState.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
         list = new ArrayList<ChartItem>();
+
         monthExpensesChart = new LineChartItem(generateDataLine(), getActivity());
-        productCountChart = new BarChartItem(generateDataBar(1), getActivity());
+        productCountChart = new BarChartItem(generateDataBar(), getActivity());
         categoryPercentageChart = new PieChartItem(generateCategoriesDataPie(), getActivity());
+
         list.add(monthExpensesChart);
         list.add(productCountChart);
         list.add(categoryPercentageChart);
@@ -122,41 +131,79 @@ public class GraphsFragment extends Fragment {
     private LineData generateDataLine() {
 
         ArrayList<Entry> e1 = new ArrayList<Entry>();
+        ArrayList<Entry> e2 = new ArrayList<Entry>();
         ArrayList<Date> monthDates = getMonthsDates();
+        int sum = 0;
+        float curr;
         for (int i = 0; i < 12; i++) {
-            e1.add(new Entry((float)(purchaseDAO.getExpensesBetween(monthDates.get(i), monthDates.get(i+1))), i));
+            curr = (float)(purchaseDAO.getExpensesBetween(monthDates.get(i), monthDates.get(i+1)));
+            sum += curr;
+            e1.add(new Entry(curr, i));
+        }
+        for (int i = 0; i < 12; i++) {
+            e2.add(new Entry(sum/12,i));
         }
 
-        LineDataSet d1 = new LineDataSet(e1, "Expenses");
+        LineDataSet d1 = new LineDataSet(e1, "Year expenses");
+        LineDataSet d2 = new LineDataSet(e2, "Average");
+
         d1.setLineWidth(2.5f);
-        d1.setCircleSize(4.5f);
+        d1.setDrawCircles(false);
         d1.setHighLightColor(Color.rgb(244, 117, 117));
         d1.setDrawValues(true);
-        d1.setDrawCubic(true);
-        d1.setDrawFilled(true);
+        d1.setValueTextSize(10f);
+
+        d2.setLineWidth(1.5f);
+        d2.setColor(Color.rgb(250, 60, 60));
+        d2.setDrawValues(false);
+        d2.setDrawCircles(false);
 
         ArrayList<LineDataSet> sets = new ArrayList<LineDataSet>();
         sets.add(d1);
+        sets.add(d2);
 
         LineData cd = new LineData(getMonths(), sets);
         return cd;
     }
 
-    private BarData generateDataBar(int cnt) {
+    private BarData generateDataBar() {
 
-        ArrayList<BarEntry> entries = new ArrayList<BarEntry>();
+        ArrayList<BarEntry> entries = new ArrayList<>();
+        ArrayList<Product> mostBought = (ArrayList)productDAO.getMostBoughtProducts(10);
+        Collections.sort(mostBought, COUNT_ORDER);
+        Collections.reverse(mostBought);
 
-        for (int i = 0; i < 12; i++) {
-            entries.add(new BarEntry((int) (Math.random() * 70) + 30, i));
+        ArrayList<Integer> counts = new ArrayList<>();
+        ArrayList<String> names = new ArrayList<>();
+
+        for (Product p : mostBought) {
+            counts.add(p.getTotalPurchases());
+            names.add(p.getName());
         }
 
-        BarDataSet d = new BarDataSet(entries, "New DataSet " + cnt);
-        d.setBarSpacePercent(20f);
-        d.setColors(ColorTemplate.VORDIPLOM_COLORS);
-        d.setHighLightAlpha(255);
+        for (int i = 0; i < counts.size(); i++) {
+            entries.add(new BarEntry(counts.get(i), i));
+        }
 
-        BarData cd = new BarData(getMonths(), d);
-        return cd;
+        BarDataSet d = new BarDataSet(entries, "Most popular products");
+        d.setBarSpacePercent(40f);
+
+        ArrayList<Integer> colors = new ArrayList<Integer>();
+        for (int c : ColorTemplate.VORDIPLOM_COLORS)
+            colors.add(c);
+        for (int c : ColorTemplate.JOYFUL_COLORS)
+            colors.add(c);
+        for (int c : ColorTemplate.COLORFUL_COLORS)
+            colors.add(c);
+        for (int c : ColorTemplate.LIBERTY_COLORS)
+            colors.add(c);
+        for (int c : ColorTemplate.PASTEL_COLORS)
+            colors.add(c);
+        d.setColors(colors);
+
+        d.setHighLightAlpha(255);
+        d.setValueTextSize(10f);
+        return new BarData(names, d);
     }
 
     private PieData generateCategoriesDataPie() {
