@@ -18,6 +18,7 @@ public class PagingListView<T> extends ListView implements AbsListView.OnScrollL
     private boolean isLoading;
     private PagingListener listener;
     private EntityListAdapter<T> adapter;
+    private static final String TAG = "PagingListView";
 
     public static interface PagingListener {
         public void loadData();
@@ -62,14 +63,16 @@ public class PagingListView<T> extends ListView implements AbsListView.OnScrollL
 
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
+        //Log.d(TAG, "firstVisible=" + firstVisibleItem + ", visibleCout=" + visibleItemCount + ", totalCount=" + totalItemCount);
         if (getAdapter() == null)
             return;
         if (getAdapter().getCount() == 0)
             return;
+        //Log.d(TAG, "isLoading=" + isLoading);
         if (visibleItemCount + firstVisibleItem >= totalItemCount && !isLoading) {
             isLoading = true;
             listener.loadData();
+            isLoading = false;
         }
     }
 }
