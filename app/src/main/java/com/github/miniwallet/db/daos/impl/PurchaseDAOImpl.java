@@ -3,7 +3,6 @@ package com.github.miniwallet.db.daos.impl;
 import android.util.Log;
 
 import com.github.miniwallet.db.daos.PurchaseDAO;
-import com.github.miniwallet.db.daos.impl.entities.PriceTable;
 import com.github.miniwallet.db.daos.impl.entities.ProductTable;
 import com.github.miniwallet.db.daos.impl.entities.PurchaseTable;
 import com.github.miniwallet.shopping.Product;
@@ -55,11 +54,11 @@ public class PurchaseDAOImpl implements PurchaseDAO {
         long startLong = start.getTime();
         long endLong = end.getTime();
 
-        List<PriceTable> purchases = PriceTable.find(PriceTable.class,
+        List<PurchaseTable> purchases = PurchaseTable.find(PurchaseTable.class,
                 "date between ? and ?", String.valueOf(startLong), String.valueOf(endLong));
 
         double total = 0;
-        for (PriceTable purchase : purchases) {
+        for (PurchaseTable purchase : purchases) {
             total += purchase.getPrice();
         }
         Log.d(TAG, "Returning " + total);
@@ -74,9 +73,9 @@ public class PurchaseDAOImpl implements PurchaseDAO {
         long endLong = end.getTime();
 
 
-        //List<PurchaseTable> purchaseTable = PurchaseTable.findWithQuery(PurchaseTable.class, "SELECT * FROM purchase_table ORDER BY price DESC LIMIT 50");
-        List<PurchaseTable> purchaseTable = PurchaseTable.findWithQuery(PurchaseTable.class, "SELECT * FROM purchase_table WHERE date between ? and ? ORDER BY ? LIMIT ? OFFSET ?",
-                String.valueOf(startLong), String.valueOf(endLong), orderBy, String.valueOf(limit), String.valueOf(skip));
+        //List<PurchaseTable> purchaseTable = PurchaseTable.findWithQuery(PurchaseTable.class, "SELECT * FROM purchase_table ORDER BY price DESC LIMIT 50", null);
+        List<PurchaseTable> purchaseTable = PurchaseTable.findWithQuery(PurchaseTable.class, "SELECT * FROM purchase_table WHERE date between ? and ? ORDER BY " + orderBy + " LIMIT " + limit + " OFFSET " + skip,
+                String.valueOf(startLong), String.valueOf(endLong));
 //        List<PurchaseTable> purchaseTable = PurchaseTable.find(PurchaseTable.class,
 //                "date between ? and ?", new String[]{String.valueOf(startLong), String.valueOf(endLong)}, null, orderBy, null);
         List<Purchase> result = ListUtils.convertList(purchaseTable);
