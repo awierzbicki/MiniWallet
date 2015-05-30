@@ -2,7 +2,9 @@ package com.github.miniwallet;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -16,7 +18,8 @@ public class PurchaseMapActivity extends Activity implements OnMapReadyCallback,
 
     private MapFragment mapFragment;
     private LatLng purchaseLatLang;
-
+    private static final String TAG = "PurchaseMapActivity";
+    private static final float ZOOM = 15;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,11 +37,18 @@ public class PurchaseMapActivity extends Activity implements OnMapReadyCallback,
 
     @Override
     public void onMapLoaded() {
+        Log.i(TAG, "shoud be marker added");
         mapFragment.getMap().addMarker(new MarkerOptions().position(purchaseLatLang));
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        Log.d(TAG, "shoud be marker added");
+        mapFragment.getMap().addMarker(new MarkerOptions().position(purchaseLatLang));
+        mapFragment.getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(purchaseLatLang, ZOOM));
+//        LatLng lodz = new LatLng(51.759445, 19.457216);
+//        mapFragment.getMap().addMarker(new MarkerOptions().position(lodz));
+//        mapFragment.getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(lodz, ZOOM));
 
     }
 }

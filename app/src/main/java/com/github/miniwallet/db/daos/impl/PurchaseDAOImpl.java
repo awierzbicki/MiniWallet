@@ -72,16 +72,11 @@ public class PurchaseDAOImpl implements PurchaseDAO {
         long startLong = start.getTime();
         long endLong = end.getTime();
 
-
-        //List<PurchaseTable> purchaseTable = PurchaseTable.findWithQuery(PurchaseTable.class, "SELECT * FROM purchase_table ORDER BY price DESC LIMIT 50", null);
         List<PurchaseTable> purchaseTable = PurchaseTable.findWithQuery(PurchaseTable.class, "SELECT * FROM purchase_table WHERE date between ? and ? ORDER BY " + orderBy + " LIMIT " + limit + " OFFSET " + skip,
                 String.valueOf(startLong), String.valueOf(endLong));
 //        List<PurchaseTable> purchaseTable = PurchaseTable.find(PurchaseTable.class,
 //                "date between ? and ?", new String[]{String.valueOf(startLong), String.valueOf(endLong)}, null, orderBy, null);
-        List<Purchase> result = ListUtils.convertList(purchaseTable);
-        Log.i(TAG, "Fisrt=" + result.get(0));
-        Log.i(TAG, "Last=" + result.get(result.size() - 1));
-        return result;
+        return ListUtils.convertList(purchaseTable);
     }
 
     @Override
@@ -114,6 +109,4 @@ public class PurchaseDAOImpl implements PurchaseDAO {
         List<PurchaseTable> purchases = PurchaseTable.find(PurchaseTable.class, "product = ?", productTable.getId().toString());
         return ListUtils.convertList(purchases);
     }
-
-
 }
