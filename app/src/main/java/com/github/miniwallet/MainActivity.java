@@ -10,26 +10,34 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Window;
 
+import com.astuetz.PagerSlidingTabStrip;
 import com.github.mikephil.charting.utils.Utils;
 import com.github.miniwallet.actions.purchase.PurchaseFragment;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
 public class MainActivity extends FragmentActivity {
     private static final int PAGES_NUMBER = 5;
-    //@InjectView(R.id.pager)
-    ViewPager mPager;
-    private PagerAdapter mPagerAdapter;
+    private PagerAdapter pagerAdapter;
     private static final int GRAPH_PAGE = 0;
     private static final int MAIN_PAGE = 1;
     private static final int PURCHASE_PAGE = 2;
     private static final int HISTORY_PAGE = 3;
     private static final int MAP_PAGE = 4;
     private int actualPage = MAIN_PAGE;
-
     private MainFragment mainFragment;
+
     private PurchaseFragment purchaseFragment;
     private GraphsFragment graphsFragment;
     private HistoryFragment historyFragment;
     private PurchaseMapFragment purchaseMapFragment;
+
+    @InjectView(R.id.pager)
+    ViewPager pager;
+
+    @InjectView(R.id.tabs)
+    PagerSlidingTabStrip tabsStrip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,16 +46,25 @@ public class MainActivity extends FragmentActivity {
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_screen_slide);
         Utils.init(this);
-        mPager = (ViewPager) findViewById(R.id.pager);
+        ButterKnife.inject(this);
 
-        mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
-        mPager.setAdapter(mPagerAdapter);
-        mPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        pagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+        pager.setAdapter(pagerAdapter);
+        pager.setCurrentItem(MAIN_PAGE);
+        pager.setOnPageChangeListener(getListener());
+
+        tabsStrip.setViewPager(pager);
+    }
+
+
+
+    private ViewPager.OnPageChangeListener getListener() {
+        return new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 /*
                 float appColor[]= {50.0f * (position + positionOffset), 0.5f, 0.9f};
-                mPager.setBackgroundColor(Color.HSVToColor(appColor));
+                pager.setBackgroundColor(Color.HSVToColor(appColor));
                 */
             }
 
@@ -72,14 +89,16 @@ public class MainActivity extends FragmentActivity {
             public void onPageScrollStateChanged(int state) {
 
             }
-        });
 
+
+        };
     }
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
         public ScreenSlidePagerAdapter(FragmentManager fm) {
             super(fm);
         }
+
         @Override
         public Fragment getItem(int position) {
             System.out.println("Page: " + position);
@@ -104,10 +123,25 @@ public class MainActivity extends FragmentActivity {
         }
 
         @Override
+        public CharSequence getPageTitle(int position) {
+            switch (position) {
+                case MAIN_PAGE:
+                    return "Start page";
+                case PURCHASE_PAGE:
+                    return "Product list";
+                case GRAPH_PAGE:
+                    return "Graphs";
+                case HISTORY_PAGE:
+                    return "Purchase history";
+                case MAP_PAGE:
+                    return "Purchase locations";
+            }
+            return "";
+        }
+
+        @Override
         public int getCount() {
             return PAGES_NUMBER;
         }
     }
-
-
 }
