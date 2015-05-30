@@ -14,7 +14,7 @@ import com.github.mikephil.charting.utils.Utils;
 import com.github.miniwallet.actions.purchase.PurchaseFragment;
 
 public class MainActivity extends FragmentActivity {
-    private static final int PAGES_NUMBER = 4;
+    private static final int PAGES_NUMBER = 5;
     //@InjectView(R.id.pager)
     ViewPager mPager;
     private PagerAdapter mPagerAdapter;
@@ -22,12 +22,14 @@ public class MainActivity extends FragmentActivity {
     private static final int MAIN_PAGE = 1;
     private static final int PURCHASE_PAGE = 2;
     private static final int HISTORY_PAGE = 3;
+    private static final int MAP_PAGE = 4;
     private int actualPage = MAIN_PAGE;
 
     private MainFragment mainFragment;
     private PurchaseFragment purchaseFragment;
     private GraphsFragment graphsFragment;
     private HistoryFragment historyFragment;
+    private PurchaseMapFragment purchaseMapFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +96,9 @@ public class MainActivity extends FragmentActivity {
                 case HISTORY_PAGE:
                     historyFragment = new HistoryFragment();
                     return historyFragment;
+                case MAP_PAGE:
+                    purchaseMapFragment = new PurchaseMapFragment();
+                    return purchaseMapFragment;
             }
             return new PurchaseFragment();
         }

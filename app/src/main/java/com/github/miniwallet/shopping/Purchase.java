@@ -1,10 +1,11 @@
 package com.github.miniwallet.shopping;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.clustering.ClusterItem;
 
 import java.util.Date;
 
-public class Purchase {
+public class Purchase implements ClusterItem {
     private Long id;
     private double price;
     private Product product;
@@ -38,7 +39,7 @@ public class Purchase {
         return product;
     }
 
-    public LatLng getLocation() {
+    public LatLng getPosition() {
         return location;
     }
 

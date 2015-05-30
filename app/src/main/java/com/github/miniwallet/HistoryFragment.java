@@ -34,7 +34,7 @@ import butterknife.OnItemSelected;
 public class HistoryFragment extends Fragment implements PagingListView.PagingListener {
 
     private enum SortingType {
-        PRICE("Lowest price", "price"), PRICE_DESC("Highest price", " price DESC"), DATE("Latest date", "date DESC"), DATE_DESC("Earliest date", "date");
+        PRICE("Lowest price", "price"), PRICE_DESC("Highest price", "price DESC"), DATE("Latest date", "date DESC"), DATE_DESC("Earliest date", "date");
 
         private final String name;
 
@@ -63,6 +63,7 @@ public class HistoryFragment extends Fragment implements PagingListView.PagingLi
     private Date startDate;
     private long lastItemIndex = 0;
     private long maxIndex;
+    private Object lock = new Object();
 
     private Date endDate;
     private SortingType sortingType = SortingType.DATE;
@@ -107,8 +108,8 @@ public class HistoryFragment extends Fragment implements PagingListView.PagingLi
     public void onPurchaseClick(int position) {
         Purchase purchase = purchaseList.get(position);
         Intent intent = new Intent(getActivity(), PurchaseMapActivity.class);
-        intent.putExtra("PurchaseLat", purchase.getLocation().latitude);
-        intent.putExtra("PurchaseLng", purchase.getLocation().longitude);
+        intent.putExtra("PurchaseLat", purchase.getPosition().latitude);
+        intent.putExtra("PurchaseLng", purchase.getPosition().longitude);
         startActivity(intent);
     }
 
@@ -159,7 +160,7 @@ public class HistoryFragment extends Fragment implements PagingListView.PagingLi
     }
 
     private void validate() {
-        lastItemIndex = 0;
+        lastItemIndex = ITEM_PER_PAGE;
         Log.i("HistoryFragment", "startDate=" + startDate + ", endDate=" + endDate);
         purchaseList = purchaseDAO.getSortedPurchasesBetween(startDate, endDate, sortingType.getCommand(), ITEM_PER_PAGE, 0);
         maxIndex = purchaseDAO.getPurchasesTotalNumber(startDate, endDate);
@@ -178,7 +179,7 @@ public class HistoryFragment extends Fragment implements PagingListView.PagingLi
         @Override
         protected List<Purchase> doInBackground(String... params) {
             Log.i("Purchase_Loading", params[0]);
-            return purchaseDAO.getSortedPurchasesBetween(startDate, endDate, sortingType.getCommand(), ITEM_PER_PAGE, lastItemIndex);
+            return purchaseDAO.getSortedPurchasesBetween(startDate, endDate, sortingType.getCommand(), ITEM_PER_PAGE, Long.parseLong(params[0]));
         }
 
         @Override
@@ -193,14 +194,17 @@ public class HistoryFragment extends Fragment implements PagingListView.PagingLi
 
     @Override
     public void loadData() {
-        lastItemIndex = adapter.getCount();
-        Log.i("Loading history", "lastIndex=" + lastItemIndex + "maxIndex=" + maxIndex);
-        if (lastItemIndex >= maxIndex) {
-            return;
+        synchronized (lock) {
+            //lastItemIndex = adapter.getCount();
+            Log.i("Loading history", "lastIndex=" + lastItemIndex + "maxIndex=" + maxIndex);
+            if (lastItemIndex >= maxIndex) {
+                return;
+            }
+            lastItemIndex += ITEM_PER_PAGE;
+            PurchaseLoading task = new PurchaseLoading();
+            task.execute(String.valueOf(lastItemIndex));
         }
-        //PurchaseLoading task = new PurchaseLoading();
-        //task.execute(String.valueOf(lastItemIndex));
         Log.i("HistoryFragment", sortingType.getCommand());
-        pagingListView.addNewData(purchaseDAO.getSortedPurchasesBetween(startDate, endDate, sortingType.getCommand(), ITEM_PER_PAGE, lastItemIndex));
+        //pagingListView.addNewData(purchaseDAO.getSortedPurchasesBetween(startDate, endDate, sortingType.getCommand(), ITEM_PER_PAGE, lastItemIndex));
     }
 }

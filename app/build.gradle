@@ -28,6 +28,7 @@ dependencies {
     compile group: 'com.google.guava', name: 'guava', version: '18.0'
     compile 'com.github.PhilJay:MPAndroidChart:v2.1.0'
     compile 'org.apache.commons:commons-lang3:3.0'
+    compile 'com.google.maps.android:android-maps-utils:0.3+'
 
 }
 

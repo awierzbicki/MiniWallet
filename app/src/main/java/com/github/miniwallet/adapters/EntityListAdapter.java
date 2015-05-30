@@ -41,7 +41,9 @@ public class EntityListAdapter<T> extends ArrayAdapter<T> {
     }
 
     public void addAll(List<T> list) {
-        values.addAll(list);
+        synchronized (values) {
+            values.addAll(list);
+        }
     }
 
     @Override

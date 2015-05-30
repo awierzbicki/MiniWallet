@@ -4,8 +4,8 @@ import android.util.Log;
 
 import com.github.miniwallet.db.daos.ProductDAO;
 import com.github.miniwallet.db.daos.impl.entities.CategoryTable;
-import com.github.miniwallet.db.daos.impl.entities.PriceTable;
 import com.github.miniwallet.db.daos.impl.entities.ProductTable;
+import com.github.miniwallet.db.daos.impl.entities.PurchaseTable;
 import com.github.miniwallet.shopping.Category;
 import com.github.miniwallet.shopping.Product;
 import com.google.common.collect.Maps;
@@ -93,11 +93,11 @@ public class ProductDAOImpl implements ProductDAO {
     public Map<Date, Double> getPriceHistoryForProduct(Product product) {
         Log.d(TAG, "price history for product " + product.toString());
         Map<Date, Double> priceByDate = Maps.newHashMap();
-        List<PriceTable> prices = PriceTable.find(PriceTable.class, "product = ?",
+        List<PurchaseTable> purchases = PurchaseTable.find(PurchaseTable.class, "product = ?",
                 ProductTable.create(product).getId().toString());
 
-        for (PriceTable price : prices) {
-            priceByDate.put(new Date(price.getDate()), price.getPrice());
+        for (PurchaseTable p : purchases) {
+            priceByDate.put(p.getDate(), p.getPrice());
         }
         return priceByDate;
     }
