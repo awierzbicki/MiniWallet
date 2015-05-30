@@ -67,16 +67,22 @@ public class PurchaseDAOImpl implements PurchaseDAO {
     }
 
     @Override
-    public List<Purchase> getSortedPurchasesBetween(Date start, Date end, String orderBy) {
+    public List<Purchase> getSortedPurchasesBetween(Date start, Date end, String orderBy, int limit, long skip) {
         Log.d(TAG, "Getting all purchases from " + start + " to " + end + orderBy);
 
         long startLong = start.getTime();
         long endLong = end.getTime();
 
-        List<PurchaseTable> purchaseTable = PurchaseTable.find(PurchaseTable.class,
-                "date between ? and ?", new String[]{String.valueOf(startLong), String.valueOf(endLong)}, null, orderBy, null);
 
-        return ListUtils.convertList(purchaseTable);
+        //List<PurchaseTable> purchaseTable = PurchaseTable.findWithQuery(PurchaseTable.class, "SELECT * FROM purchase_table ORDER BY price DESC LIMIT 50");
+        List<PurchaseTable> purchaseTable = PurchaseTable.findWithQuery(PurchaseTable.class, "SELECT * FROM purchase_table WHERE date between ? and ? ORDER BY ? LIMIT ? OFFSET ?",
+                String.valueOf(startLong), String.valueOf(endLong), orderBy, String.valueOf(limit), String.valueOf(skip));
+//        List<PurchaseTable> purchaseTable = PurchaseTable.find(PurchaseTable.class,
+//                "date between ? and ?", new String[]{String.valueOf(startLong), String.valueOf(endLong)}, null, orderBy, null);
+        List<Purchase> result = ListUtils.convertList(purchaseTable);
+        Log.i(TAG, "Fisrt=" + result.get(0));
+        Log.i(TAG, "Last=" + result.get(result.size() - 1));
+        return result;
     }
 
     @Override
@@ -84,6 +90,13 @@ public class PurchaseDAOImpl implements PurchaseDAO {
         List<PurchaseTable> purchaseTable = PurchaseTable.find(PurchaseTable.class,
                 "id = ?", String.valueOf(purchaseId));
         return purchaseTable.isEmpty() ? null : purchaseTable.get(0).getLocation();
+    }
+
+    @Override
+    public long getPurchasesTotalNumber(Date start, Date end) {
+        long startLong = start.getTime();
+        long endLong = end.getTime();
+        return PurchaseTable.count(PurchaseTable.class, "date between ? and ?", new String[]{String.valueOf(startLong), String.valueOf(endLong)});
     }
 
     @Override
@@ -102,4 +115,6 @@ public class PurchaseDAOImpl implements PurchaseDAO {
         List<PurchaseTable> purchases = PurchaseTable.find(PurchaseTable.class, "product = ?", productTable.getId().toString());
         return ListUtils.convertList(purchases);
     }
+
+
 }

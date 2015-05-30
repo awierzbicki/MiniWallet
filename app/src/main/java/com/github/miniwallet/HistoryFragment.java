@@ -1,20 +1,19 @@
 package com.github.miniwallet;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.Spinner;
 
 import com.github.miniwallet.adapters.EntityListAdapter;
-import com.github.miniwallet.db.daos.ProductDAO;
 import com.github.miniwallet.db.daos.PurchaseDAO;
-import com.github.miniwallet.db.daos.impl.ProductDAOImpl;
 import com.github.miniwallet.db.daos.impl.PurchaseDAOImpl;
 import com.github.miniwallet.shopping.Purchase;
 import com.github.miniwallet.shopping.experimental.ViewHolder;
@@ -32,14 +31,14 @@ import butterknife.OnItemSelected;
 /**
  * Created by Agnieszka on 2015-05-22.
  */
-public class HistoryFragment extends Fragment {
+public class HistoryFragment extends Fragment implements PagingListView.PagingListener {
 
     private enum SortingType {
-        PRICE("Lowest price", "price"), PRICE_DESC("Highest price", " price DESC"), DATE("Latest data", "date DESC"), DATE_DESC("Earliest data", "date");
+        PRICE("Lowest price", "price"), PRICE_DESC("Highest price", " price DESC"), DATE("Latest date", "date DESC"), DATE_DESC("Earliest date", "date");
 
         private final String name;
-        private final String command;
 
+        private final String command;
         private SortingType(String name, String command) {
             this.name = name;
             this.command = command;
@@ -53,20 +52,24 @@ public class HistoryFragment extends Fragment {
         public String toString() {
             return name;
         }
+
     }
 
-    private ProductDAO productDAO;
+    private static final int ITEM_PER_PAGE = 50;
+
     private PurchaseDAO purchaseDAO;
     private EntityListAdapter<Purchase> adapter;
     private List<Purchase> purchaseList;
-
     private Date startDate;
+    private long lastItemIndex = 0;
+    private long maxIndex;
+
     private Date endDate;
     private SortingType sortingType = SortingType.DATE;
-
-
     @InjectView(R.id.purchaseList)
-    ListView listView;
+    PagingListView<Purchase> pagingListView;
+
+
     @InjectView(R.id.spinnerSortBy)
     Spinner sortBySpinner;
     @InjectView(R.id.buttonToday)
@@ -77,22 +80,21 @@ public class HistoryFragment extends Fragment {
     Button buttonMonth;
     @InjectView(R.id.buttonYear)
     Button buttonYear;
-
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        productDAO = new ProductDAOImpl();
         purchaseDAO = new PurchaseDAOImpl();
         adapter = new EntityListAdapter(getActivity(), purchaseList, ViewHolder.Type.HISTORY_ROW);
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_history, container, false);
         ButterKnife.inject(this, rootView);
-        listView.setAdapter(adapter);
+        pagingListView.setAdapter(adapter);
+        pagingListView.setListener(this);
         ArrayAdapter<SortingType> adapterState = new ArrayAdapter<SortingType>(getActivity(),
                 android.R.layout.simple_spinner_dropdown_item, SortingType.values());
         adapterState.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -119,6 +121,8 @@ public class HistoryFragment extends Fragment {
 
     @OnClick(R.id.buttonWeek)
     public void onWeekClick() {
+
+        Log.i("button Week", "lastIndex=" + lastItemIndex + "maxIndex=" + maxIndex);
         loadPurchaseFromTimeAgo(7, Calendar.DAY_OF_MONTH);
         setButtonsAlpha((float) 0.3);
         buttonWeek.setAlpha(1);
@@ -138,7 +142,6 @@ public class HistoryFragment extends Fragment {
         buttonYear.setAlpha(1);
     }
 
-
     private void loadPurchaseFromTimeAgo(int value, int calendarField) {
         Calendar cal = Calendar.getInstance();
         endDate = cal.getTime();
@@ -147,14 +150,19 @@ public class HistoryFragment extends Fragment {
         validate();
     }
 
+
     @OnItemSelected(R.id.spinnerSortBy)
     public void onItemSelected(int position) {
         sortingType = SortingType.values()[position];
+        Log.i("HistoryFragment", sortingType.getCommand());
         validate();
     }
 
     private void validate() {
-        purchaseList = purchaseDAO.getSortedPurchasesBetween(startDate, endDate, sortingType.getCommand());
+        lastItemIndex = 0;
+        Log.i("HistoryFragment", "startDate=" + startDate + ", endDate=" + endDate);
+        purchaseList = purchaseDAO.getSortedPurchasesBetween(startDate, endDate, sortingType.getCommand(), ITEM_PER_PAGE, 0);
+        maxIndex = purchaseDAO.getPurchasesTotalNumber(startDate, endDate);
         adapter.setNewValuesAndNotify(purchaseList);
     }
 
@@ -163,5 +171,36 @@ public class HistoryFragment extends Fragment {
         buttonMonth.setAlpha(alpha);
         buttonWeek.setAlpha(alpha);
         buttonYear.setAlpha(alpha);
+    }
+
+    private class PurchaseLoading extends AsyncTask<String, Void, List<Purchase>> {
+
+        @Override
+        protected List<Purchase> doInBackground(String... params) {
+            Log.i("Purchase_Loading", params[0]);
+            return purchaseDAO.getSortedPurchasesBetween(startDate, endDate, sortingType.getCommand(), ITEM_PER_PAGE, lastItemIndex);
+        }
+
+        @Override
+        protected void onPostExecute(List<Purchase> purchases) {
+            if (isCancelled()) {
+                purchases = null;
+            }
+            super.onPostExecute(purchases);
+            pagingListView.addNewData(purchases);
+        }
+    }
+
+    @Override
+    public void loadData() {
+        lastItemIndex = adapter.getCount();
+        Log.i("Loading history", "lastIndex=" + lastItemIndex + "maxIndex=" + maxIndex);
+        if (lastItemIndex >= maxIndex) {
+            return;
+        }
+        //PurchaseLoading task = new PurchaseLoading();
+        //task.execute(String.valueOf(lastItemIndex));
+        Log.i("HistoryFragment", sortingType.getCommand());
+        pagingListView.addNewData(purchaseDAO.getSortedPurchasesBetween(startDate, endDate, sortingType.getCommand(), ITEM_PER_PAGE, lastItemIndex));
     }
 }
