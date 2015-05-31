@@ -21,7 +21,7 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="0px"
             android:layout_height="match_parent"
-            android:text="Today"
+            android:text="24h"
             android:id="@+id/buttonToday"
             android:layout_weight="0.25" />
 
@@ -61,7 +61,7 @@
         android:layout_width="match_parent"
         android:layout_height="0px"
         android:layout_weight="0.005"
-        android:background="#0B9563" />
+        android:background="#2442B6" />
 
     <com.github.miniwallet.PagingListView
         android:id="@+id/purchaseList"

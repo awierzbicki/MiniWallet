@@ -1,10 +1,6 @@
 package com.github.miniwallet;
 
-import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -31,7 +27,6 @@ import com.github.miniwallet.shopping.Category;
 import com.github.miniwallet.shopping.Product;
 import com.github.miniwallet.shopping.Purchase;
 import com.github.miniwallet.shopping.experimental.ViewHolder;
-import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -46,7 +41,7 @@ import butterknife.OnItemSelected;
 
 public class MainFragment extends Fragment {
 
-    public static final String NEW_CATEGORY= "New category...";
+    public static final String NEW_CATEGORY = "New category...";
     public static final int ADD = 0;
 
     private EntityListAdapter<Product> adapter;
@@ -130,15 +125,15 @@ public class MainFragment extends Fragment {
         else
             price = Double.parseDouble(priceText);
 
-        Purchase purchase = new Purchase(price, new Product(new Category((String)spinner.getSelectedItem()), price, name, 0), locator.getLocation(), new Date());
+        Purchase purchase = new Purchase(price, new Product(new Category((String) spinner.getSelectedItem()), price, name, 0), locator.getLocation(), new Date());
         purchaseItem(purchase);
     }
 
     @OnItemSelected(R.id.spinner)
     public void onItemSelected(int position) {
-        if(spinner.getSelectedItem().equals(NEW_CATEGORY)) {
+        if (spinner.getSelectedItem().equals(NEW_CATEGORY)) {
             Toast.makeText(getActivity(), "nowa...", Toast.LENGTH_SHORT).show();
-            Intent intent  = new Intent(getActivity(), AddCategoryActivity.class);
+            Intent intent = new Intent(getActivity(), AddCategoryActivity.class);
             startActivityForResult(intent, ADD);
         }
     }
@@ -148,7 +143,7 @@ public class MainFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == ADD && resultCode == AddCategoryActivity.OK) {
-            if(data != null) {
+            if (data != null) {
                 String result = data.getStringExtra(AddCategoryActivity.CATEGORY);
                 Category category = new Category(result);
                 categoryDAO.insertCategory(category);

@@ -24,14 +24,25 @@
             android:layout_alignParentStart="false">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:id="@+id/textView"
                 android:layout_weight="1"
                 android:layout_gravity="center"
                 android:textColor="#ffa74a2e"
                 android:textSize="30dp"
-                android:textColorHighlight="#ffff8040" />
+                android:background="#FFC8BA"
+                android:textColorHighlight="#ffff8040"
+                android:text="text"
+                android:singleLine="false"
+                android:textAlignment="gravity"
+                android:gravity="center_horizontal" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0px"
+                android:layout_weight="0.05"
+                android:background="#ffa74a2e" />
 
             <RelativeLayout
                 android:layout_width="fill_parent"
@@ -97,6 +108,12 @@
                     android:spinnerMode="dialog" />
 
             </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0px"
+                android:layout_weight="0.05"
+                android:background="#ffa74a2e" />
 
             <ListView
                 android:layout_width="wrap_content"

@@ -110,6 +110,7 @@ public class HistoryFragment extends Fragment implements PagingListView.PagingLi
         Intent intent = new Intent(getActivity(), PurchaseMapActivity.class);
         intent.putExtra("PurchaseLat", purchase.getPosition().latitude);
         intent.putExtra("PurchaseLng", purchase.getPosition().longitude);
+        Log.i("Purchase clicked", purchase.getPosition().latitude + " " + purchase.getPosition().longitude);
         startActivity(intent);
     }
 
@@ -159,11 +160,14 @@ public class HistoryFragment extends Fragment implements PagingListView.PagingLi
         validate();
     }
 
-    private void validate() {
+    public void validate() {
         lastItemIndex = ITEM_PER_PAGE;
         Log.i("HistoryFragment", "startDate=" + startDate + ", endDate=" + endDate);
+        if (purchaseList != null)
+            Log.i("HistoryFragment", "Size before: " + Integer.toString(purchaseList.size()));
         purchaseList = purchaseDAO.getSortedPurchasesBetween(startDate, endDate, sortingType.getCommand(), ITEM_PER_PAGE, 0);
         maxIndex = purchaseDAO.getPurchasesTotalNumber(startDate, endDate);
+        Log.i("HistoryFragment", "Size after: " + Integer.toString(purchaseList.size()));
         adapter.setNewValuesAndNotify(purchaseList);
     }
 

@@ -120,13 +120,16 @@ public class MainActivity extends FragmentActivity {
                     if (purchaseFragment != null) {
                         purchaseFragment.validate();
                     }
-
+                case HISTORY_PAGE:
+                    if (historyFragment != null) {
+                        historyFragment.validate();
+                    }
             }
-        }
+            }
+
 
         @Override
         public void onPageScrollStateChanged(int state) {
-
         }
     };
 

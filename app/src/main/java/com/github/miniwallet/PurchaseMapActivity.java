@@ -3,6 +3,7 @@ package com.github.miniwallet;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Window;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -14,7 +15,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 /**
  * Created by Agnieszka on 2015-05-28.
  */
-public class PurchaseMapActivity extends Activity implements OnMapReadyCallback, GoogleMap.OnMapLoadedCallback {
+public class PurchaseMapActivity extends Activity implements OnMapReadyCallback {
 
     private MapFragment mapFragment;
     private LatLng purchaseLatLang;
@@ -24,7 +25,7 @@ public class PurchaseMapActivity extends Activity implements OnMapReadyCallback,
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        System.out.println("onCreate");
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_maps);
 
         mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
@@ -32,13 +33,8 @@ public class PurchaseMapActivity extends Activity implements OnMapReadyCallback,
 
         double lat = getIntent().getDoubleExtra("PurchaseLat", 0);
         double lng = getIntent().getDoubleExtra("PurchaseLng", 0);
+        Log.i(TAG, lat + " " + lng);
         purchaseLatLang = new LatLng(lat, lng);
-    }
-
-    @Override
-    public void onMapLoaded() {
-        Log.i(TAG, "shoud be marker added");
-        mapFragment.getMap().addMarker(new MarkerOptions().position(purchaseLatLang));
     }
 
     @Override

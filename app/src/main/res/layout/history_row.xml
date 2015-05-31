@@ -28,7 +28,7 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/productName"
-            android:textColor="#0B9563"
+            android:textColor="#2442B6"
             android:textSize="15dp" />
 
 
@@ -49,6 +49,7 @@
             android:layout_alignParentBottom="false"
             android:layout_alignLeft="@+id/productName"
             android:layout_below="@+id/productName"
+            android:textColor="#9A9BA1"
             android:textSize="12dp" />
 
     </RelativeLayout>
