@@ -102,8 +102,11 @@ public class GraphsFragment extends Fragment {
         list.add(productCountChart);
         list.add(categoryPercentageChart);
 
-        ChartDataAdapter cda = new ChartDataAdapter(getActivity(), list);
-        listView.setAdapter(cda);
+        if(getActivity() != null) {
+            ChartDataAdapter cda = new ChartDataAdapter(getActivity(), list);
+            listView.setAdapter(cda);
+        }
+
     }
 
     public void deleteGraphs() {

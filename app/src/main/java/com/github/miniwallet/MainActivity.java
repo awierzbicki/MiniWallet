@@ -113,23 +113,43 @@ public class MainActivity extends FragmentActivity {
                                 graphsFragment.loadingPanel.setVisibility(View.GONE);
                                 graphsFragment.setUp();
                             }
-                        }, 3000);
+                        }, 2000);
 
                     }
                 case MAIN_PAGE:
                     if (purchaseFragment != null) {
-                        mainFragment.updateList();
-                        mainFragment.setActualTotal();
-                        graphsFragment.deleteGraphs();
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                mainFragment.updateList();
+                                mainFragment.setActualTotal();
+                                graphsFragment.deleteGraphs();
+                            }
+                        }, 200);
+
 
                     }
                 case PURCHASE_PAGE:
                     if (purchaseFragment != null) {
-                        purchaseFragment.validate();
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                purchaseFragment.validate();
+                            }
+                        }, 200);
+
                     }
                 case HISTORY_PAGE:
                     if (historyFragment != null) {
-                        historyFragment.onTodayClick();
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                historyFragment.onTodayClick();
+                            }
+                        }, 200);
                     }
             }
             }
