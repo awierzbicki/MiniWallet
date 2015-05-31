@@ -146,7 +146,7 @@ public class HistoryFragment extends Fragment implements PagingListView.PagingLi
     private void loadPurchaseFromTimeAgo(int value, int calendarField) {
         Calendar cal = Calendar.getInstance();
         endDate = cal.getTime();
-        cal.roll(calendarField, (-1) * value);
+        cal.add(calendarField, (-1) * value);
         startDate = cal.getTime();
         validate();
     }
