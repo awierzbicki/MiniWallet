@@ -122,7 +122,7 @@ public class MainActivity extends FragmentActivity {
                     }
                 case HISTORY_PAGE:
                     if (historyFragment != null) {
-                        historyFragment.validate();
+                        historyFragment.onTodayClick();
                     }
             }
             }

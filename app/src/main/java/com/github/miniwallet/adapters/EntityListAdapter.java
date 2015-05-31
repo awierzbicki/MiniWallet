@@ -46,6 +46,7 @@ public class EntityListAdapter<T> extends ArrayAdapter<T> {
         }
     }
 
+
     @Override
     public int getCount() {
         return values != null ? values.size() : 0;
