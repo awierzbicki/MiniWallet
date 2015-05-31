@@ -73,10 +73,10 @@ public class PurchasesGenerator {
     }
 
     private static LatLng position() {
-        return new LatLng(random(LAT + 0.1691572, LAT - 0.1182459), random(LNG + 0.274717, LNG - 0.2250223));
+        return new LatLng(random(LAT + 0.0191572, LAT - 0.0182459), random(LNG + 0.014717, LNG - 0.0150223));
     }
 
     private static double random(double min, double max) {
-       return Precision.round((random.nextDouble() * (max - min) + min), 2);
+       return Precision.round((random.nextDouble() * (max - min) + min), 7);
     }
 }

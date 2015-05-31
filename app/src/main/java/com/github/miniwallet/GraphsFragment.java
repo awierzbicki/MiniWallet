@@ -83,12 +83,11 @@ public class GraphsFragment extends Fragment {
         ButterKnife.inject(this, rootView);
         listView.setAdapter(adapter);
 
-        setUp();
-
         return rootView;
     }
 
     public void setUp() {
+
         list = new ArrayList<ChartItem>();
 
         monthExpensesChart = new LineChartItem(generateDataLine(), getActivity());
@@ -100,8 +99,14 @@ public class GraphsFragment extends Fragment {
         list.add(categoryPercentageChart);
 
         ChartDataAdapter cda = new ChartDataAdapter(getActivity(), list);
-
         listView.setAdapter(cda);
+    }
+
+    public void deleteGraphs() {
+        if(list != null){
+            list.clear();
+        }
+
     }
 
     private class ChartDataAdapter extends ArrayAdapter<ChartItem> {

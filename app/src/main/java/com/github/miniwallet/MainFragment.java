@@ -3,6 +3,7 @@ package com.github.miniwallet;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ import com.github.miniwallet.shopping.Category;
 import com.github.miniwallet.shopping.Product;
 import com.github.miniwallet.shopping.Purchase;
 import com.github.miniwallet.shopping.experimental.ViewHolder;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -125,7 +127,7 @@ public class MainFragment extends Fragment {
         else
             price = Double.parseDouble(priceText);
 
-        Purchase purchase = new Purchase(price, new Product(new Category((String) spinner.getSelectedItem()), price, name, 0), locator.getLocation(), new Date());
+        Purchase purchase = new Purchase(price, new Product(new Category((String)spinner.getSelectedItem()), price, name, 0), locator.getLocation(), new Date());
         purchaseItem(purchase);
     }
 

@@ -4,9 +4,16 @@
     android:layout_height="fill_parent"
     tools:context="com.github.miniwallet.shopping.experimental.PurchaseActivity"
     android:orientation="vertical"
-    android:windowSoftInputMode="adjustResize">
+    android:windowSoftInputMode="adjustResize"
+    android:weightSum="2">
 
-
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:layout_gravity="center"
+        android:id="@+id/loadingPanel"
+        android:layout_marginTop="50dp" />
     <ListView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"

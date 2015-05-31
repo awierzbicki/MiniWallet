@@ -2,6 +2,7 @@ package com.github.miniwallet;
 
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -9,6 +10,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.View;
 import android.view.Window;
 
 import com.astuetz.PagerSlidingTabStrip;
@@ -92,29 +94,34 @@ public class MainActivity extends FragmentActivity {
     private ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                /*
-                float appColor[]= {50.0f * (position + positionOffset), 0.5f, 0.9f};
-                pager.setBackgroundColor(Color.HSVToColor(appColor));
-                */
+
         }
 
         @Override
         public void onPageSelected(int position) {
-                /*
-                float appColor[]= {50.0f * (position), 0.5f, 0.9f};
-                mPager.setBackgroundColor(Color.HSVToColor(appColor));
-                */
+
             Log.d("Main activity", "POSITION " + position);
             switch (position) {
 
                 case GRAPH_PAGE:
                     if (graphsFragment != null) {
-                        graphsFragment.setUp();
+                        findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+                                graphsFragment.setUp();
+                            }
+                        }, 3000);
+
                     }
                 case MAIN_PAGE:
                     if (purchaseFragment != null) {
                         mainFragment.updateList();
                         mainFragment.setActualTotal();
+                        graphsFragment.deleteGraphs();
+
                     }
                 case PURCHASE_PAGE:
                     if (purchaseFragment != null) {
