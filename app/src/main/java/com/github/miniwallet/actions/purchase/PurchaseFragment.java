@@ -1,8 +1,12 @@
 package com.github.miniwallet.actions.purchase;
 
+import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +30,7 @@ import com.github.miniwallet.filters.ProductCategoryFilter;
 import com.github.miniwallet.filters.ProductMaxPriceFilter;
 import com.github.miniwallet.filters.ProductMinPriceFilter;
 import com.github.miniwallet.filters.ProductNameFilter;
+import com.github.miniwallet.location.Locator;
 import com.github.miniwallet.shopping.Product;
 import com.github.miniwallet.shopping.Purchase;
 import com.github.miniwallet.shopping.experimental.ViewHolder;
@@ -70,6 +75,7 @@ public class PurchaseFragment extends Fragment implements AdapterView.OnItemClic
     private ProductCategoryFilter productCategoryFilter;
     private ProductMinPriceFilter productMinPriceFilter;
     private ProductMaxPriceFilter productMaxPriceFilter;
+    private Locator locator;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,6 +83,7 @@ public class PurchaseFragment extends Fragment implements AdapterView.OnItemClic
         productDAO = new ProductDAOImpl();
         categoryDAO = new CategoryDAOImpl();
         purchaseDAO = new PurchaseDAOImpl();
+        locator = new Locator(getActivity());
 
         productList = productDAO.getAllProducts();
         categories = categoryDAO.getAllCategoriesNames();
@@ -118,7 +125,7 @@ public class PurchaseFragment extends Fragment implements AdapterView.OnItemClic
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Product product = productList.get(position);
-        Purchase purchase = new Purchase(product.getLastPrice(), product, new LatLng(1.1, 2.2), new Date());
+        Purchase purchase = new Purchase(product.getLastPrice(), product, locator.getLocation(), new Date());
         purchaseDAO.insertPurchase(purchase);
     }
 

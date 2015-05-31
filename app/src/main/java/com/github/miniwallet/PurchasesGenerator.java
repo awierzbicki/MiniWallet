@@ -5,15 +5,24 @@ import com.github.miniwallet.shopping.Product;
 import com.github.miniwallet.shopping.Purchase;
 import com.google.android.gms.maps.model.LatLng;
 
+import org.apache.commons.math3.util.Precision;
+
+import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 /**
  * Created by Dominik on 2015-05-30.
  */
 public class PurchasesGenerator {
+    private static Random random = new Random(100);
+    private static double LAT = 51.112372;
+    private static double LNG = 17.059421;
+    private static long BEGIN = Timestamp.valueOf("2015-01-01 00:00:00").getTime();
+    private static long END = Timestamp.valueOf("2015-05-31 00:58:00").getTime();
+
     private static final Category[] categories = {
             new Category("Drinks"), // 0
             new Category("Snacks"), // 1
@@ -24,7 +33,8 @@ public class PurchasesGenerator {
             new Category("Newspapers"), // 6
             new Category("Entertainment") // 7
     };
-    private static final Product[] products = {
+
+    private static Product[] products = {
             new Product(categories[0], 3.0, "Coffee", 0),
             new Product(categories[0], 1.5, "Pepsi", 0),
             new Product(categories[0], 2.0, "Water", 0),
@@ -47,49 +57,26 @@ public class PurchasesGenerator {
             new Product(categories[7], 6.8, "Museum", 0),
     };
 
-    private static final LatLng places[] = {
-            new LatLng(51.112372, 17.059421), // Pasaz Grunwaldzki
-            new LatLng(51.108199, 17.040144), // Galeria Dominikanska
-            new LatLng(51.110206, 17.032097), // Rynek
-            new LatLng(51.119508, 16.990010), // Magnolia
-    };
-
-    private static ArrayList<Date> getMonthsDates() {
-        ArrayList<Date> dates = new ArrayList<>();
-        Calendar cal = Calendar.getInstance();
-        for(int i = 0; i < 12; i++) {
-            cal.set(Calendar.MONTH, i);
-            cal.set(Calendar.DAY_OF_MONTH, 1);
-            dates.add(cal.getTime());
-        }
-        cal.set(Calendar.MONTH, 1);
-        cal.set(Calendar.DAY_OF_MONTH, 1);
-        cal.add(Calendar.YEAR, 1);
-        dates.add(cal.getTime());
-        return dates;
+    public static Date nextDate() {
+        long diff = END - BEGIN + 1;
+        return new Date(BEGIN + (long) (Math.random() * diff));
     }
 
-    public static  ArrayList<Purchase> fabricatePurchases(int maxProductsPerMonth) {
-        ArrayList<Purchase> result = new ArrayList<>();
-        Random r = new Random();
-        Date today = new Date();
-        Product product;
-        LatLng latLng;
-        for(Date date : getMonthsDates()) {
-            if(today.getTime() > date.getTime()) {
-                int n = r.nextInt(maxProductsPerMonth)+1;
-                for (int i = 0; i < n; i++) {
-                    int pro = r.nextInt(products.length);
-                    int lat = r.nextInt(places.length);
-                    double priceChanger = r.nextDouble()+0.5;
-                    product = products[pro];
-                    latLng = places[lat];
-                    latLng = new LatLng(latLng.longitude + r.nextDouble() * 0.001, latLng.latitude + r.nextDouble() * 0.001);
-                    date.setTime(date.getTime() + 1000*3600);
-                    result.add(new Purchase(product.getLastPrice()*priceChanger, product, latLng, date));
-                }
-            }
+    public static List<Purchase> randomPurchases(int n) {
+        List<Purchase> purchases = new ArrayList<>();
+        for(int i = 0; i < n; i++) {
+            Product p = products[random.nextInt(products.length)];
+            double price = random(p.getLastPrice() - 0.5, p.getLastPrice() + 0.5);
+            purchases.add(new Purchase(price, p, position(), nextDate()));
         }
-        return result;
+        return purchases;
+    }
+
+    private static LatLng position() {
+        return new LatLng(random(LAT + 0.1691572, LAT - 0.1182459), random(LNG + 0.274717, LNG - 0.2250223));
+    }
+
+    private static double random(double min, double max) {
+       return Precision.round((random.nextDouble() * (max - min) + min), 2);
     }
 }

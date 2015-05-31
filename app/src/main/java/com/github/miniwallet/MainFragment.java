@@ -1,6 +1,10 @@
 package com.github.miniwallet;
 
+import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -22,6 +26,7 @@ import com.github.miniwallet.db.daos.PurchaseDAO;
 import com.github.miniwallet.db.daos.impl.CategoryDAOImpl;
 import com.github.miniwallet.db.daos.impl.ProductDAOImpl;
 import com.github.miniwallet.db.daos.impl.PurchaseDAOImpl;
+import com.github.miniwallet.location.Locator;
 import com.github.miniwallet.shopping.Category;
 import com.github.miniwallet.shopping.Product;
 import com.github.miniwallet.shopping.Purchase;
@@ -52,6 +57,7 @@ public class MainFragment extends Fragment {
     private List<Product> productList;
     private ArrayList<String> categories;
     private ArrayAdapter<String> adapterState;
+    private Locator locator;
 
     @InjectView(R.id.editText)
     EditText editText;
@@ -76,7 +82,7 @@ public class MainFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 productList = productDAO.getMostBoughtProducts(5);
                 Product product = productList.get(position);
-                Purchase purchase = new Purchase(product.getLastPrice(), product, new LatLng(1.1, 2.2), new Date());
+                Purchase purchase = new Purchase(product.getLastPrice(), product, locator.getLocation(), new Date());
                 purchaseItem(purchase);
             }
         });
@@ -98,6 +104,7 @@ public class MainFragment extends Fragment {
     public void onCreate(Bundle savedState) {
         super.onCreate(savedState);
 
+        locator = new Locator(getActivity());
         productDAO = new ProductDAOImpl();
         categoryDAO = new CategoryDAOImpl();
         purchaseDAO = new PurchaseDAOImpl();
@@ -122,7 +129,8 @@ public class MainFragment extends Fragment {
             price = 0;
         else
             price = Double.parseDouble(priceText);
-        Purchase purchase = new Purchase(price, new Product(new Category((String)spinner.getSelectedItem()), price, name, 0), new LatLng(1.1, 2.2), new Date());
+
+        Purchase purchase = new Purchase(price, new Product(new Category((String)spinner.getSelectedItem()), price, name, 0), locator.getLocation(), new Date());
         purchaseItem(purchase);
     }
 
@@ -194,5 +202,4 @@ public class MainFragment extends Fragment {
         String info = "Today : " + String.format("%.2f", getDailyExpenses());
         textView.setText((CharSequence) info);
     }
-
 }

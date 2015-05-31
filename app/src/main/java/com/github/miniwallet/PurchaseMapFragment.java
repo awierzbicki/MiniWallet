@@ -45,36 +45,11 @@ public class PurchaseMapFragment extends SupportMapFragment {
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.107885, 17.038538), 9.5f));
         ClusterManager<Purchase> clusterManager = new ClusterManager<>(getActivity(), getMap());
         clusterManager.setRenderer(new PurchaseRenderer(getActivity(), map, clusterManager));
-        clusterManager.addItems(randomPurchases(30));
+        clusterManager.addItems(purchaseDAO.getAllPurchases());
         clusterManager.cluster();
 
         map.setOnCameraChangeListener(clusterManager);
         map.setOnMarkerClickListener(clusterManager);
         map.setOnInfoWindowClickListener(clusterManager);
-    }
-
-    private List<Product> randomProducts(int n) {
-        List<Product> products = new ArrayList<>();
-        for (int i = 0; i < n; i++) {
-            String name = RandomStringUtils.randomAlphabetic(6).toLowerCase();
-            products.add(new Product(null, random.nextInt(20), name, random.nextInt(100)));
-        }
-        return products;
-    }
-
-    private List<Purchase> randomPurchases(int n) {
-        List<Purchase> purchases = new ArrayList<>();
-        for (Product p : randomProducts(n)) {
-            purchases.add(new Purchase(random.nextInt(100), p, position(), new Date()));
-        }
-        return purchases;
-    }
-
-    private LatLng position() {
-        return new LatLng(random(LAT + 0.1691572, LAT - 0.1182459), random(LNG + 0.274717, LNG - 0.2250223));
-    }
-
-    private double random(double min, double max) {
-        return random.nextDouble() * (max - min) + min;
     }
 }

@@ -21,7 +21,7 @@ public class ProductNameFilter implements Filter<Product> {
 
         List<Product> newValues = new ArrayList<>();
         for(Product product : values) {
-            if(StringUtils.contains(product.getName(), pattern)) {
+            if(StringUtils.containsIgnoreCase(product.getName(), pattern)) {
                 newValues.add(product);
             }
         }

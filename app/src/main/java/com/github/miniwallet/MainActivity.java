@@ -8,11 +8,15 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Window;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.github.mikephil.charting.utils.Utils;
 import com.github.miniwallet.actions.purchase.PurchaseFragment;
+import com.github.miniwallet.db.daos.PurchaseDAO;
+import com.github.miniwallet.db.daos.impl.PurchaseDAOImpl;
+import com.github.miniwallet.shopping.Purchase;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -48,19 +52,29 @@ public class MainActivity extends FragmentActivity {
         Utils.init(this);
         ButterKnife.inject(this);
 
+        insertBasePurchases();
+
         pagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         pager.setAdapter(pagerAdapter);
         pager.setCurrentItem(MAIN_PAGE);
-        pager.setOnPageChangeListener(getListener());
+        pager.setOnPageChangeListener(pageChangeListener);
 
         tabsStrip.setViewPager(pager);
         tabsStrip.setTabPaddingLeftRight(5);
+        tabsStrip.setOnPageChangeListener(pageChangeListener);
+    }
+
+    private void insertBasePurchases() {
+        PurchaseDAO purchaseDAO = new PurchaseDAOImpl();
+        if (purchaseDAO.getAllPurchases().isEmpty()) {
+            for (Purchase p : PurchasesGenerator.randomPurchases(50)) {
+                purchaseDAO.insertPurchase(p);
+            }
+        }
     }
 
 
-
-    private ViewPager.OnPageChangeListener getListener() {
-        return new ViewPager.OnPageChangeListener() {
+    private ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 /*
@@ -75,8 +89,13 @@ public class MainActivity extends FragmentActivity {
                 float appColor[]= {50.0f * (position), 0.5f, 0.9f};
                 mPager.setBackgroundColor(Color.HSVToColor(appColor));
                 */
+                Log.d("Main activity", "POSITION " + position);
                 switch (position) {
+
                     case GRAPH_PAGE:
+                        if (graphsFragment != null) {
+                            graphsFragment.setUp();
+                        }
                     case MAIN_PAGE:
                         if (purchaseFragment != null) {
                             mainFragment.updateList();
@@ -86,6 +105,7 @@ public class MainActivity extends FragmentActivity {
                         if (purchaseFragment != null) {
                             purchaseFragment.validate();
                         }
+
                 }
             }
 
@@ -93,10 +113,8 @@ public class MainActivity extends FragmentActivity {
             public void onPageScrollStateChanged(int state) {
 
             }
-
-
         };
-    }
+
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
         public ScreenSlidePagerAdapter(FragmentManager fm) {

@@ -83,6 +83,12 @@ public class GraphsFragment extends Fragment {
         ButterKnife.inject(this, rootView);
         listView.setAdapter(adapter);
 
+        setUp();
+
+        return rootView;
+    }
+
+    public void setUp() {
         list = new ArrayList<ChartItem>();
 
         monthExpensesChart = new LineChartItem(generateDataLine(), getActivity());
@@ -93,18 +99,9 @@ public class GraphsFragment extends Fragment {
         list.add(productCountChart);
         list.add(categoryPercentageChart);
 
-        /*
-        ArrayList<Purchase> fakePurchases = PurchasesGenerator.fabricatePurchases(40);
-        for (Purchase p : fakePurchases) {
-            purchaseDAO.insertPurchase(p);
-        }
-        */
-
         ChartDataAdapter cda = new ChartDataAdapter(getActivity(), list);
 
         listView.setAdapter(cda);
-
-        return rootView;
     }
 
     private class ChartDataAdapter extends ArrayAdapter<ChartItem> {

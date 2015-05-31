@@ -30,7 +30,7 @@ public class PurchaseRenderer extends DefaultClusterRenderer<Purchase> {
 
     @Override
     protected void onBeforeClusterItemRendered(Purchase purchase, MarkerOptions markerOptions) {
-        createItemView(markerOptions, String.valueOf(purchase.getPrice()) + " PLN", purchase.getProduct().getName());
+        createItemView(markerOptions, String.format("%.2f", purchase.getPrice()) + " PLN", purchase.getProduct().getName());
     }
 
     @Override
@@ -41,7 +41,7 @@ public class PurchaseRenderer extends DefaultClusterRenderer<Purchase> {
             prices += p.getPrice();
         }
 
-        createItemView(markerOptions, String.valueOf(prices) + " PLN", String.valueOf(cluster.getSize()));
+        createItemView(markerOptions,  String.format("%.2f", prices) + " PLN", String.valueOf(cluster.getSize()));
     }
 
     private void createItemView(MarkerOptions markerOptions, String priceText, String iconText) {
