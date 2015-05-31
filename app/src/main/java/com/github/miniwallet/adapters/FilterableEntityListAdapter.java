@@ -1,6 +1,7 @@
 package com.github.miniwallet.adapters;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.github.miniwallet.filters.ComplexFilter;
 import com.github.miniwallet.shopping.experimental.ViewHolder;
@@ -32,7 +33,6 @@ public class FilterableEntityListAdapter<T> extends EntityListAdapter<T> {
 
     public void filterAndNotify() {
         super.values = filter.performFiltering();
-        System.out.println("current vals " + values.toString());
         notifyDataSetChanged();
     }
 }

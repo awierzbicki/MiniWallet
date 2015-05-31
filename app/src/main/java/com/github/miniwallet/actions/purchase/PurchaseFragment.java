@@ -56,7 +56,6 @@ public class PurchaseFragment extends Fragment implements AdapterView.OnItemClic
     private PurchaseDAO purchaseDAO;
 
     private FilterableEntityListAdapter<Product> adapter;
-    private List<Product> productList;
     private ArrayList<String> categories;
     private ArrayAdapter<String> categoriesAdapter;
 
@@ -83,14 +82,13 @@ public class PurchaseFragment extends Fragment implements AdapterView.OnItemClic
         productDAO = new ProductDAOImpl();
         categoryDAO = new CategoryDAOImpl();
         purchaseDAO = new PurchaseDAOImpl();
-        locator = new Locator(getActivity());
+//        locator = new Locator(getActivity());
 
-        productList = productDAO.getAllProducts();
         categories = categoryDAO.getAllCategoriesNames();
         categories.add(CATEGORY_ALL_POSITION, "All");
 
         ComplexFilter<Product> filter = setUpFilter();
-        adapter = new FilterableEntityListAdapter<>(getActivity(), productList, ViewHolder.Type.PURCHASE_ROW, filter);
+        adapter = new FilterableEntityListAdapter<>(getActivity(), productDAO.getAllProducts(), ViewHolder.Type.PURCHASE_ROW, filter);
     }
 
     @Override
@@ -118,15 +116,18 @@ public class PurchaseFragment extends Fragment implements AdapterView.OnItemClic
         super.onActivityResult(requestCode, resultCode, data);
 
         productCategoryFilter.setCategories(categoryDAO.getCategoryByName(categories.get(categorySpinner.getSelectedItemPosition())));
-        productList = productDAO.getAllProducts();
-        adapter.setNewValuesAndNotify(productList);
+        adapter.setNewValuesAndNotify( productDAO.getAllProducts());
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Product product = productList.get(position);
+        Product product = adapter.getItem(position);
         Purchase purchase = new Purchase(product.getLastPrice(), product, locator.getLocation(), new Date());
         purchaseDAO.insertPurchase(purchase);
+    }
+
+    public void setLocator(Locator locator) {
+        this.locator = locator;
     }
 
     private class EditItemListener implements AdapterView.OnItemLongClickListener {
@@ -149,7 +150,7 @@ public class PurchaseFragment extends Fragment implements AdapterView.OnItemClic
     @OnItemSelected(R.id.spinnerCategory)
     public void onItemSelected(int position) {
         productCategoryFilter.setCategories(categoryDAO.getCategoryByName(categories.get(position)));
-        adapter.setNewValuesAndNotify(productList);
+        adapter.filterAndNotify();
     }
 
     private ComplexFilter<Product> setUpFilter() {
@@ -159,7 +160,7 @@ public class PurchaseFragment extends Fragment implements AdapterView.OnItemClic
         productMinPriceFilter = new ProductMinPriceFilter();
         productMaxPriceFilter = new ProductMaxPriceFilter();
 
-        return new ComplexFilter<>(productList, productNameFilter,
+        return new ComplexFilter<>(productDAO.getAllProducts(), productNameFilter,
                 productMaxPriceFilter, productMinPriceFilter, productCategoryFilter);
     }
 
@@ -169,10 +170,9 @@ public class PurchaseFragment extends Fragment implements AdapterView.OnItemClic
     }
 
     public void validate() {
-        productList = productDAO.getAllProducts();
         categories = categoryDAO.getAllCategoriesNames();
         categories.add(CATEGORY_ALL_POSITION, "All");
         categoriesAdapter.notifyDataSetChanged();
-        adapter.setNewValuesAndNotify(productList);
+        adapter.setNewValuesAndNotify(productDAO.getAllProducts());
     }
 }

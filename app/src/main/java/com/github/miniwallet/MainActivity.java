@@ -16,6 +16,7 @@ import com.github.mikephil.charting.utils.Utils;
 import com.github.miniwallet.actions.purchase.PurchaseFragment;
 import com.github.miniwallet.db.daos.PurchaseDAO;
 import com.github.miniwallet.db.daos.impl.PurchaseDAOImpl;
+import com.github.miniwallet.location.Locator;
 import com.github.miniwallet.shopping.Purchase;
 
 import butterknife.ButterKnife;
@@ -23,6 +24,7 @@ import butterknife.InjectView;
 
 public class MainActivity extends FragmentActivity {
     private static final int PAGES_NUMBER = 5;
+    private static final String TAG = "MAIN_ACTIVITY";
     private PagerAdapter pagerAdapter;
     private static final int GRAPH_PAGE = 0;
     private static final int MAIN_PAGE = 1;
@@ -42,6 +44,7 @@ public class MainActivity extends FragmentActivity {
 
     @InjectView(R.id.tabs)
     PagerSlidingTabStrip tabsStrip;
+    private Locator locator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +54,10 @@ public class MainActivity extends FragmentActivity {
         setContentView(R.layout.activity_screen_slide);
         Utils.init(this);
         ButterKnife.inject(this);
+
+        locator = new Locator(this);
+        locator.connect();
+        Log.d(TAG, "upon creation location is " + locator.getLocation().latitude + locator.getLocation().longitude);
 
         insertBasePurchases();
 
@@ -64,6 +71,14 @@ public class MainActivity extends FragmentActivity {
         tabsStrip.setOnPageChangeListener(pageChangeListener);
     }
 
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        locator.disconnect();
+    }
+
     private void insertBasePurchases() {
         PurchaseDAO purchaseDAO = new PurchaseDAOImpl();
         if (purchaseDAO.getAllPurchases().isEmpty()) {
@@ -75,45 +90,45 @@ public class MainActivity extends FragmentActivity {
 
 
     private ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 /*
                 float appColor[]= {50.0f * (position + positionOffset), 0.5f, 0.9f};
                 pager.setBackgroundColor(Color.HSVToColor(appColor));
                 */
-            }
+        }
 
-            @Override
-            public void onPageSelected(int position) {
+        @Override
+        public void onPageSelected(int position) {
                 /*
                 float appColor[]= {50.0f * (position), 0.5f, 0.9f};
                 mPager.setBackgroundColor(Color.HSVToColor(appColor));
                 */
-                Log.d("Main activity", "POSITION " + position);
-                switch (position) {
+            Log.d("Main activity", "POSITION " + position);
+            switch (position) {
 
-                    case GRAPH_PAGE:
-                        if (graphsFragment != null) {
-                            graphsFragment.setUp();
-                        }
-                    case MAIN_PAGE:
-                        if (purchaseFragment != null) {
-                            mainFragment.updateList();
-                            mainFragment.setActualTotal();
-                        }
-                    case PURCHASE_PAGE:
-                        if (purchaseFragment != null) {
-                            purchaseFragment.validate();
-                        }
-
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
+                case GRAPH_PAGE:
+                    if (graphsFragment != null) {
+                        graphsFragment.setUp();
+                    }
+                case MAIN_PAGE:
+                    if (purchaseFragment != null) {
+                        mainFragment.updateList();
+                        mainFragment.setActualTotal();
+                    }
+                case PURCHASE_PAGE:
+                    if (purchaseFragment != null) {
+                        purchaseFragment.validate();
+                    }
 
             }
-        };
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
+        }
+    };
 
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
@@ -127,9 +142,11 @@ public class MainActivity extends FragmentActivity {
             switch (position) {
                 case MAIN_PAGE:
                     mainFragment = new MainFragment();
+                    mainFragment.setLocator(locator);
                     return mainFragment;
                 case PURCHASE_PAGE:
                     purchaseFragment = new PurchaseFragment();
+                    purchaseFragment.setLocator(locator);
                     return purchaseFragment;
                 case GRAPH_PAGE:
                     graphsFragment = new GraphsFragment();

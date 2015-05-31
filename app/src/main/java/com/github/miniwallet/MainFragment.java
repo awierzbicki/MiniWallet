@@ -103,8 +103,8 @@ public class MainFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedState) {
         super.onCreate(savedState);
-
-        locator = new Locator(getActivity());
+//
+//        locator = new Locator(getActivity());
         productDAO = new ProductDAOImpl();
         categoryDAO = new CategoryDAOImpl();
         purchaseDAO = new PurchaseDAOImpl();
@@ -201,5 +201,9 @@ public class MainFragment extends Fragment {
     public void setActualTotal() {
         String info = "Today : " + String.format("%.2f", getDailyExpenses());
         textView.setText((CharSequence) info);
+    }
+
+    public void setLocator(Locator locator) {
+        this.locator = locator;
     }
 }
