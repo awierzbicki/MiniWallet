@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
@@ -67,6 +68,9 @@ public class GraphsFragment extends Fragment {
 
     @InjectView(R.id.graphsListView)
     ListView listView;
+
+    @InjectView(R.id.loadingPanel)
+    ProgressBar loadingPanel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

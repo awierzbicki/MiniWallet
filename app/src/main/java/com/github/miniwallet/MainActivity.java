@@ -105,12 +105,12 @@ public class MainActivity extends FragmentActivity {
 
                 case GRAPH_PAGE:
                     if (graphsFragment != null) {
-                        findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
+                        graphsFragment.loadingPanel.setVisibility(View.VISIBLE);
                         Handler handler = new Handler();
                         handler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+                                graphsFragment.loadingPanel.setVisibility(View.GONE);
                                 graphsFragment.setUp();
                             }
                         }, 3000);
