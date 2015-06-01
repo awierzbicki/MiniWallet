@@ -29,10 +29,8 @@
                 android:id="@+id/textView"
                 android:layout_weight="1"
                 android:layout_gravity="center"
-                android:textColor="#ffa74a2e"
+                android:textColor="#ffc62828"
                 android:textSize="30dp"
-                android:background="#FFC8BA"
-                android:textColorHighlight="#ffff8040"
                 android:text="text"
                 android:singleLine="false"
                 android:textAlignment="gravity"
@@ -42,7 +40,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0px"
                 android:layout_weight="0.05"
-                android:background="#ffa74a2e" />
+                android:background="#ff33691e" />
 
             <RelativeLayout
                 android:layout_width="fill_parent"
@@ -88,6 +86,8 @@
                     android:layout_alignParentStart="false"
                     android:layout_alignParentBottom="false"
                     android:text="@string/buyButtonText"
+                    android:textSize="15sp"
+
                     android:layout_alignParentRight="true"
                     android:layout_marginTop="2dp"
                     android:layout_marginBottom="2dp"
@@ -99,13 +99,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="20dp"
                     android:id="@+id/spinner"
-                    android:layout_marginTop="1dp"
-                    android:layout_marginBottom="1dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginBottom="3dp"
                     android:touchscreenBlocksFocus="false"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentEnd="false"
                     android:layout_alignParentStart="false"
-                    android:spinnerMode="dialog" />
+                    android:popupBackground="#FFE082"/>
 
             </RelativeLayout>
 
@@ -113,7 +113,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0px"
                 android:layout_weight="0.05"
-                android:background="#ffa74a2e" />
+                android:background="#ff33691e" />
 
             <ListView
                 android:layout_width="wrap_content"

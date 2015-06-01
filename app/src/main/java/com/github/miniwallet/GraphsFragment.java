@@ -2,6 +2,8 @@ package com.github.miniwallet;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.LightingColorFilter;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -78,6 +80,7 @@ public class GraphsFragment extends Fragment {
         productDAO = new ProductDAOImpl();
         categoryDAO = new CategoryDAOImpl();
         purchaseDAO = new PurchaseDAOImpl();
+
     }
 
     @Override
@@ -86,7 +89,8 @@ public class GraphsFragment extends Fragment {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_graphs, container, false);
         ButterKnife.inject(this, rootView);
         listView.setAdapter(adapter);
-
+        setColorOfProgressBar(loadingPanel, 0xFFC107);
+        loadingPanel.getIndeterminateDrawable().setColorFilter(new LightingColorFilter(0x0, 0xFFC107));
         return rootView;
     }
 
@@ -152,7 +156,7 @@ public class GraphsFragment extends Fragment {
             e1.add(new Entry(curr, i));
         }
         for (int i = 0; i < 12; i++) {
-            e2.add(new Entry(sum/12,i));
+            e2.add(new Entry(sum/6,i));
         }
 
         LineDataSet d1 = new LineDataSet(e1, "Year expenses");
@@ -160,12 +164,12 @@ public class GraphsFragment extends Fragment {
 
         d1.setLineWidth(2.5f);
         d1.setDrawCircles(false);
-        d1.setHighLightColor(Color.rgb(244, 117, 117));
+        d1.setColor(Color.parseColor("#8BC34A"));
         d1.setDrawValues(true);
         d1.setValueTextSize(10f);
 
         d2.setLineWidth(1.5f);
-        d2.setColor(Color.rgb(250, 60, 60));
+        d2.setColor(Color.parseColor("#F4511E"));
         d2.setDrawValues(false);
         d2.setDrawCircles(false);
 
@@ -200,11 +204,11 @@ public class GraphsFragment extends Fragment {
         d.setBarSpacePercent(40f);
 
         ArrayList<Integer> colors = new ArrayList<Integer>();
-        for (int c : ColorTemplate.VORDIPLOM_COLORS)
+        for (int c : ColorTemplate.COLORFUL_COLORS)
             colors.add(c);
         for (int c : ColorTemplate.JOYFUL_COLORS)
             colors.add(c);
-        for (int c : ColorTemplate.COLORFUL_COLORS)
+        for (int c : ColorTemplate.VORDIPLOM_COLORS)
             colors.add(c);
         for (int c : ColorTemplate.LIBERTY_COLORS)
             colors.add(c);
@@ -297,6 +301,9 @@ public class GraphsFragment extends Fragment {
         cal.add(Calendar.YEAR, 1);
         dates.add(cal.getTime());
         return dates;
+    }
+    public static void setColorOfProgressBar(ProgressBar mProgressBar, int mColor){
+        mProgressBar.getIndeterminateDrawable().setColorFilter(mColor, PorterDuff.Mode.MULTIPLY);
     }
 
 }

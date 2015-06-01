@@ -12,6 +12,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -72,15 +73,21 @@ public class EditProductActivity extends Activity {
         adapterState.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categorySpinner.setAdapter(adapterState);
 
-
         YAxis yax = productChart.getAxisLeft();
-
         yax.setYOffset(20f);
         yax.setTextSize(15f);
+        yax.setTextColor(Color.WHITE);
+        yax.setGridColor(Color.WHITE);
 
         XAxis xax =  productChart.getXAxis();
         xax.setEnabled(false);
         xax.setXOffset(20f);
+
+        productChart.setDescription("");
+
+        Legend legend = productChart.getLegend();
+        legend.setTextColor(Color.WHITE);
+        legend.setTextSize(18f);
 
         productChart.setDrawGridBackground(false);
         productChart.getAxisRight().setEnabled(false);
@@ -131,15 +138,14 @@ public class EditProductActivity extends Activity {
         d1.setLineWidth(2.5f);
         d1.setDrawCircles(true);
         d1.setDrawCircleHole(false);
-        d1.setHighLightColor(Color.rgb(244, 117, 117));
         d1.setDrawValues(false);
-
+        d1.setColor(Color.parseColor("#FFC107"));
+        d1.setCircleColor(Color.parseColor("#FFB300"));
 
         ArrayList<LineDataSet> sets = new ArrayList<LineDataSet>();
         sets.add(d1);
 
-        LineData cd = new LineData(labels,sets);
-        return cd;
+        return new LineData(labels,sets);
     }
 
 }

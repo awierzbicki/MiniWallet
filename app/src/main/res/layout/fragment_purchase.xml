@@ -20,11 +20,17 @@
         android:gravity="bottom|end"
         android:hint="search" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_weight="0.005"
+        android:background="#ff33691e" />
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="0px"
-        android:layout_weight="0.12"
+        android:layout_weight="0.15"
         android:weightSum="1">
 
         <Spinner
@@ -32,8 +38,10 @@
             android:layout_height="match_parent"
             android:id="@+id/spinnerCategory"
             android:layout_weight="0.6"
-            android:gravity="left"
-            android:textAlignment="gravity" />
+            android:textAlignment="gravity"
+            android:focusableInTouchMode="true"
+            android:popupBackground="#FFE082"
+            android:layout_marginRight="5dp" />
 
         <EditText
             android:layout_width="0px"
@@ -43,9 +51,10 @@
             android:id="@+id/editMinPrice"
             android:layout_weight="0.2"
             android:singleLine="true"
-            android:textAlignment="gravity"
-            android:gravity="bottom|right"
-            android:hint="min" />
+            android:textAlignment="center"
+            android:gravity="center|right"
+            android:hint="min"
+            android:layout_gravity="center" />
 
         <EditText
             android:layout_width="0px"
@@ -54,9 +63,10 @@
             android:ems="10"
             android:id="@+id/editMaxPrice"
             android:layout_weight="0.2"
-            android:textAlignment="gravity"
-            android:gravity="bottom|right"
-            android:hint="max" />
+            android:textAlignment="center"
+            android:hint="max"
+            android:layout_gravity="center"
+            android:gravity="center|right" />
 
     </LinearLayout>
 
@@ -64,13 +74,13 @@
         android:layout_width="match_parent"
         android:layout_height="0px"
         android:layout_weight="0.005"
-        android:background="#0B9563" />
+        android:background="#ff33691e" />
 
     <ListView
         android:id="@+id/purchaseList"
         android:layout_width="match_parent"
         android:layout_height="0px"
-        android:layout_weight="0.75"
+        android:layout_weight="0.7"
         android:fastScrollAlwaysVisible="false"
         android:nestedScrollingEnabled="true" />
 

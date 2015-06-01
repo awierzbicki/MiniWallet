@@ -23,7 +23,6 @@ import com.github.miniwallet.db.daos.impl.PurchaseDAOImpl;
 import com.github.miniwallet.location.Locator;
 import com.github.miniwallet.shopping.Purchase;
 
-
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
@@ -57,7 +56,7 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         Window newWindow = this.getWindow();
-        newWindow.setStatusBarColor(Color.parseColor("#2196F3"));
+
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_screen_slide);
         Utils.init(this);
@@ -76,8 +75,14 @@ public class MainActivity extends FragmentActivity {
 
         tabsStrip.setViewPager(pager);
         tabsStrip.setTabPaddingLeftRight(5);
-        tabsStrip.setBackgroundColor(Color.parseColor("#2196F3"));
         tabsStrip.setOnPageChangeListener(pageChangeListener);
+
+        tabsStrip.setBackgroundColor(Color.parseColor("#689F38"));
+        tabsStrip.setIndicatorColor(Color.parseColor("#DCEDC8"));
+        newWindow.setStatusBarColor(Color.parseColor("#558B2F"));
+        pager.setBackgroundColor(Color.parseColor("#F1F8E9"));
+
+
 
     }
 
@@ -178,7 +183,7 @@ public class MainActivity extends FragmentActivity {
                 R.mipmap.ic_account_balance_white_24dp,
                 R.mipmap.ic_add_shopping_cart_white_24dp,
                 R.mipmap.ic_list_white_24dp,
-                R.mipmap.ic_local_offer_white_24dp,
+                R.mipmap.ic_explore_white_24dp,
         };
 
         public ScreenSlidePagerAdapter(FragmentManager fm) {
@@ -214,25 +219,6 @@ public class MainActivity extends FragmentActivity {
             }
             return new PurchaseFragment();
         }
-/*
-        @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case MAIN_PAGE:
-                    return "Start page";
-                case PURCHASE_PAGE:
-                    return "Products";
-                case GRAPH_PAGE:
-                    return "Graphs";
-                case HISTORY_PAGE:
-                    return "History";
-                case MAP_PAGE:
-                    return "Locations";
-            }
-            return "";
-
-        }
-*/
         @Override
         public int getCount() {
             return PAGES_NUMBER;

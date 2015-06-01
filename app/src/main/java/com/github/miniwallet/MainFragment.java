@@ -1,9 +1,9 @@
 package com.github.miniwallet;
 
 import android.content.Intent;
+import android.graphics.LightingColorFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +28,6 @@ import com.github.miniwallet.shopping.Category;
 import com.github.miniwallet.shopping.Product;
 import com.github.miniwallet.shopping.Purchase;
 import com.github.miniwallet.shopping.experimental.ViewHolder;
-import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -66,6 +65,8 @@ public class MainFragment extends Fragment {
     ListView listView;
     @InjectView(R.id.spinner)
     Spinner spinner;
+    @InjectView(R.id.button)
+    Button button;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -94,6 +95,8 @@ public class MainFragment extends Fragment {
         });
         adapter.notifyDataSetChanged();
         System.out.println("onCreateView");
+
+        button.getBackground().setColorFilter(new LightingColorFilter(0x0, 0xFFC107));
         return rootView;
     }
 

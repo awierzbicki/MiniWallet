@@ -15,7 +15,8 @@
         android:layout_width="match_parent"
         android:layout_height="0px"
         android:layout_weight="0.1"
-        android:weightSum="1">
+        android:weightSum="1"
+        android:layout_marginTop="10dp">
 
         <Button
             style="?android:attr/buttonStyleSmall"
@@ -54,14 +55,15 @@
         android:layout_width="match_parent"
         android:layout_height="0px"
         android:id="@+id/spinnerSortBy"
-        android:layout_weight="0.05"
-        android:focusableInTouchMode="true" />
+        android:layout_weight="0.10"
+        android:focusableInTouchMode="true"
+        android:popupBackground="#FFE082"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0px"
         android:layout_weight="0.005"
-        android:background="#2442B6" />
+        android:background="#ff33691e" />
 
     <com.github.miniwallet.PagingListView
         android:id="@+id/purchaseList"

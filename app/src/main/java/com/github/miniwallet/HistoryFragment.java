@@ -1,6 +1,7 @@
 package com.github.miniwallet;
 
 import android.content.Intent;
+import android.graphics.LightingColorFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -101,6 +102,12 @@ public class HistoryFragment extends Fragment implements PagingListView.PagingLi
         adapterState.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sortBySpinner.setAdapter(adapterState);
         onTodayClick();
+
+        buttonToday.getBackground().setColorFilter(new LightingColorFilter(0x0, 0xFFC107));
+        buttonWeek.getBackground().setColorFilter(new LightingColorFilter(0x0, 0xFFC107));
+        buttonMonth.getBackground().setColorFilter(new LightingColorFilter(0x0, 0xFFC107));
+        buttonYear.getBackground().setColorFilter(new LightingColorFilter(0x0, 0xFFC107));
+
         return rootView;
     }
 

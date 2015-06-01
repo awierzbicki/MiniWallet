@@ -102,6 +102,10 @@ public class PurchaseFragment extends Fragment implements AdapterView.OnItemClic
 
         addPriceTextListeners();
 
+        searchText.setBackground(null);
+        editMinPrice.setBackground(null);
+        editMaxPrice.setBackground(null);
+        categorySpinner.setBackgroundColor(0xFFD54F);
         return rootView;
     }
 
