@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.github.miniwallet.EditProductActivity;
 import com.github.miniwallet.R;
@@ -121,6 +122,7 @@ public class PurchaseFragment extends Fragment implements AdapterView.OnItemClic
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Product product = adapter.getItem(position);
         Purchase purchase = new Purchase(product.getLastPrice(), product, locator.getLocation(), new Date());
+        Toast.makeText(getActivity(), product.getName() + " bought", Toast.LENGTH_SHORT).show();
         purchaseDAO.insertPurchase(purchase);
     }
 
