@@ -34,7 +34,7 @@ import butterknife.OnItemSelected;
 public class HistoryFragment extends Fragment implements PagingListView.PagingListener {
 
     private enum SortingType {
-        PRICE("Lowest price", "price"), PRICE_DESC("Highest price", "price DESC"), DATE("Oldest date", "date DESC"), DATE_DESC("Newest date", "date");
+        PRICE("Lowest price", "price"), PRICE_DESC("Highest price", "price DESC"), DATE("Newest date", "date DESC"), DATE_DESC("Oldest date", "date");
 
         private final String name;
 
