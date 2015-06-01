@@ -210,6 +210,7 @@ public class GraphsFragment extends Fragment {
             colors.add(c);
         for (int c : ColorTemplate.PASTEL_COLORS)
             colors.add(c);
+        
         d.setColors(colors);
 
         d.setHighLightAlpha(255);
