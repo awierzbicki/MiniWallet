@@ -5,7 +5,6 @@ import android.os.Bundle;
 import com.github.miniwallet.db.daos.PurchaseDAO;
 import com.github.miniwallet.db.daos.impl.PurchaseDAOImpl;
 import com.github.miniwallet.maps.PurchaseRenderer;
-import com.github.miniwallet.shopping.Product;
 import com.github.miniwallet.shopping.Purchase;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -13,11 +12,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterManager;
 
-import org.apache.commons.lang3.RandomStringUtils;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 import java.util.Random;
 
 public class PurchaseMapFragment extends SupportMapFragment {
@@ -27,6 +21,7 @@ public class PurchaseMapFragment extends SupportMapFragment {
 
     private GoogleMap map;
     private PurchaseDAO purchaseDAO;
+    private ClusterManager<Purchase> clusterManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,13 +32,15 @@ public class PurchaseMapFragment extends SupportMapFragment {
     @Override
     public void onResume() {
         super.onResume();
+        if (map != null) return;
+
         map = getMap();
         start();
     }
 
     protected void start() {
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.107885, 17.038538), 9.5f));
-        ClusterManager<Purchase> clusterManager = new ClusterManager<>(getActivity(), getMap());
+        clusterManager = new ClusterManager<>(getActivity(), getMap());
         clusterManager.setRenderer(new PurchaseRenderer(getActivity(), map, clusterManager));
         clusterManager.addItems(purchaseDAO.getAllPurchases());
         clusterManager.cluster();

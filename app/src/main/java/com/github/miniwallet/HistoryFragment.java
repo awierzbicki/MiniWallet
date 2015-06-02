@@ -195,6 +195,7 @@ public class HistoryFragment extends Fragment implements PagingListView.PagingLi
                 purchases = null;
             }
             super.onPostExecute(purchases);
+            purchaseList = purchases;
             pagingListView.addNewData(purchases);
         }
     }
@@ -207,7 +208,7 @@ public class HistoryFragment extends Fragment implements PagingListView.PagingLi
             if (lastItemIndex >= maxIndex) {
                 return;
             }
-            lastItemIndex += ITEM_PER_PAGE;
+            lastItemIndex = (lastItemIndex + ITEM_PER_PAGE > maxIndex) ? maxIndex : lastItemIndex + ITEM_PER_PAGE;
             PurchaseLoading task = new PurchaseLoading();
             task.execute(String.valueOf(lastItemIndex));
         }

@@ -175,6 +175,11 @@ public class MainActivity extends FragmentActivity {
 
     };
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        locator.connect();
+    }
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter implements IconTabProvider{
 
